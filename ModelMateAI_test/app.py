@@ -9,9 +9,6 @@ from get_data import *
 import openpyxl
 from functions import *
 
-population_path = os.path.join("data", "population.csv")
-population_df = pd.read_csv(population_path)
-
 df = get_mm_data()
 
 #################################################### BUILD DASHBOARD ############################################
