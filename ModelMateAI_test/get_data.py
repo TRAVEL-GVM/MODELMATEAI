@@ -1,9 +1,9 @@
 import os
 import pandas as pd
+from config import nmd_data_path
 
 
 def get_mm_data():
-    path = os.path.join("data", "mmd.xlsx")
-    df = pd.read_excel(path)
+    df = pd.read_excel(nmd_data_path)
 
     return df
