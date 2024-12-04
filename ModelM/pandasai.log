@@ -1,0 +1,327 @@
+2024-12-04 18:46:16 [INFO] Question: Quantos findings com 
+2024-12-04 18:46:16 [INFO] Running PandasAI with openai LLM...
+2024-12-04 18:46:16 [INFO] Prompt ID: 68d69a21-a9da-4160-8775-2a35d601eccb
+2024-12-04 18:46:16 [INFO] Using prompt: You are provided with the following pandas DataFrames:
+
+<dataframe>
+Dataframe dfs[0], with 696 rows and 39 columns.
+This is the metadata of the dataframe dfs[0]:
+ID,Detetor,Referência Documental,Data Referência Documental,Sponsor,Sponsor - Dependentes,Sponsor - Área Funcional,Âmbito do Modelo,Natureza da Medida,Parâmetro,Segmento,Status de Modelo,Id Finding/Razão da Medida Nível 1,Finding/Razão da Medida,Id Obligation/Medida Nível 1,Obligation/Medida,Action Plan,Deadline Implementação,Nº of Extensions,Nº of Action Items,Tipo Action item - Dados,Tipo Action item - Processos,Tipo Action item - Metodologia,Recommendation/Recomendações,Limitation/Correcção,Severidade,Tipo de Deadline,Data de Implementação,Nível de Completude,Status,Observações,Observações - Detetor,Evidências de Implementação,Articulação com DCIPD,Ref WFMII,Modified,Created,Item Type,Path
+1,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,DRG,,,IFRS9,Governance,,Todos os Segmentos,Em Produção,C.1,Aprovação e envolvimen...,,Assegurar as atividade...,,2022-07-30 16:00:00,,,,,,,,Risco Médio,Final,2022-05-11 16:00:00,,Concluída,Medida encerrada confo...,,Relatório do Auditor E...,,004222000000130,2024-10-30 07:44:27,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+2,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,GDM,,,IFRS9,Deficiência de Documentos,,Todos os Segmentos,Em Produção,C.2,A documentação interna...,,Rever a documentação e...,,2024-09-30 16:00:00,,2.0,,,2.0,,,Risco Médio,Final,2024-03-20 00:00:00,,Em Validação Detetor,". Rec C.2 
+  #1 - NOB ...",,GDM_202312 Action plan...,,4219000000376,2024-11-26 06:42:39,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+3,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,GVM,,,IFRS9,Governance,,,Em Produção,C.6,De  acordo com o Aviso...,,O GVM deve continuar a...,,2022-12-30 16:00:00,,,,,,,,Risco Baixo,Final,2023-03-01 00:00:00,,Concluída,". The Validation Unit,...",,RE Medida C_6 Relatóri...,,4216000012862,2024-01-15 01:44:10,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+</dataframe>
+
+<conversation>
+User: Quantos findings com 
+</conversation>
+
+This is the initial python function. Do not change the params. Given the context, use the right dataframes.
+```python
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+```
+
+Take a deep breath and reason step-by-step. Act as a senior data analyst.
+In the answer, you must never write the "technical" names of the tables.
+Based on the last message in the conversation:
+- return the updated analyze_data function wrapped within ```python ```
+2024-12-04 18:46:20 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-04 18:46:20 [INFO] Code generated:
+```
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    return { "type": "string", "value": "Please provide complete information for the analysis." }
+```
+
+2024-12-04 18:46:20 [INFO] Saving charts to C:\Users\Admin\Desktop\ModelMate_statistics\temp_chart.png
+2024-12-04 18:46:20 [INFO] 
+Code running:
+```
+def analyze_data(dfs: list[pd.DataFrame]) ->dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in C:/Users/Admin/Desktop/ModelMate_statistics/temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "C:/Users/Admin/Desktop/ModelMate_statistics/temp_chart.png" }
+    """
+    return {'type': 'string', 'value': 'Please provide complete information for the analysis.'}
+        ```
+2024-12-04 18:46:20 [INFO] Answer: {'type': 'string', 'value': 'Please provide complete information for the analysis.'}
+2024-12-04 18:46:20 [INFO] Executed in: 3.221108913421631s
+2024-12-04 18:47:41 [INFO] Question: Count the number of rows?
+
+
+2024-12-04 18:47:41 [INFO] Running PandasAI with openai LLM...
+2024-12-04 18:47:41 [INFO] Prompt ID: 2aea13cc-f72c-4e17-8a6f-f705116c2710
+2024-12-04 18:47:41 [INFO] Using prompt: You are provided with the following pandas DataFrames:
+
+<dataframe>
+Dataframe dfs[0], with 696 rows and 39 columns.
+This is the metadata of the dataframe dfs[0]:
+ID,Detetor,Referência Documental,Data Referência Documental,Sponsor,Sponsor - Dependentes,Sponsor - Área Funcional,Âmbito do Modelo,Natureza da Medida,Parâmetro,Segmento,Status de Modelo,Id Finding/Razão da Medida Nível 1,Finding/Razão da Medida,Id Obligation/Medida Nível 1,Obligation/Medida,Action Plan,Deadline Implementação,Nº of Extensions,Nº of Action Items,Tipo Action item - Dados,Tipo Action item - Processos,Tipo Action item - Metodologia,Recommendation/Recomendações,Limitation/Correcção,Severidade,Tipo de Deadline,Data de Implementação,Nível de Completude,Status,Observações,Observações - Detetor,Evidências de Implementação,Articulação com DCIPD,Ref WFMII,Modified,Created,Item Type,Path
+1,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,DRG,,,IFRS9,Governance,,Todos os Segmentos,Em Produção,C.1,Aprovação e envolvimen...,,Assegurar as atividade...,,2022-07-30 16:00:00,,,,,,,,Risco Médio,Final,2022-05-11 16:00:00,,Concluída,Medida encerrada confo...,,Relatório do Auditor E...,,004222000000130,2024-10-30 07:44:27,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+2,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,GDM,,,IFRS9,Deficiência de Documentos,,Todos os Segmentos,Em Produção,C.2,A documentação interna...,,Rever a documentação e...,,2024-09-30 16:00:00,,2.0,,,2.0,,,Risco Médio,Final,2024-03-20 00:00:00,,Em Validação Detetor,". Rec C.2 
+  #1 - NOB ...",,GDM_202312 Action plan...,,4219000000376,2024-11-26 06:42:39,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+3,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,GVM,,,IFRS9,Governance,,,Em Produção,C.6,De  acordo com o Aviso...,,O GVM deve continuar a...,,2022-12-30 16:00:00,,,,,,,,Risco Baixo,Final,2023-03-01 00:00:00,,Concluída,". The Validation Unit,...",,RE Medida C_6 Relatóri...,,4216000012862,2024-01-15 01:44:10,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+</dataframe>
+
+<conversation>
+User: Count the number of rows?
+
+
+</conversation>
+
+This is the initial python function. Do not change the params. Given the context, use the right dataframes.
+```python
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+```
+
+Take a deep breath and reason step-by-step. Act as a senior data analyst.
+In the answer, you must never write the "technical" names of the tables.
+Based on the last message in the conversation:
+- return the updated analyze_data function wrapped within ```python ```
+2024-12-04 18:47:44 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-04 18:47:44 [INFO] Code generated:
+```
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    # Count the number of rows in the dataframe
+    num_rows = dfs[0].shape[0]
+    
+    return { "type": "number", "value": num_rows }
+```
+
+2024-12-04 18:47:44 [INFO] Saving charts to C:\Users\Admin\Desktop\ModelMate_statistics\temp_chart.png
+2024-12-04 18:47:44 [INFO] 
+Code running:
+```
+def analyze_data(dfs: list[pd.DataFrame]) ->dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in C:/Users/Admin/Desktop/ModelMate_statistics/temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "C:/Users/Admin/Desktop/ModelMate_statistics/temp_chart.png" }
+    """
+    num_rows = dfs[0].shape[0]
+    return {'type': 'number', 'value': num_rows}
+        ```
+2024-12-04 18:47:44 [INFO] Answer: {'type': 'number', 'value': 696}
+2024-12-04 18:47:44 [INFO] Executed in: 3.1332058906555176s
+2024-12-04 18:48:33 [INFO] Question: Qual a natureza da medida mais frequente?
+
+
+2024-12-04 18:48:33 [INFO] Running PandasAI with openai LLM...
+2024-12-04 18:48:33 [INFO] Prompt ID: b1ea178d-08f1-4ddd-bdd1-d0cc3bf5bd62
+2024-12-04 18:48:33 [INFO] Using prompt: You are provided with the following pandas DataFrames:
+
+<dataframe>
+Dataframe dfs[0], with 696 rows and 39 columns.
+This is the metadata of the dataframe dfs[0]:
+ID,Detetor,Referência Documental,Data Referência Documental,Sponsor,Sponsor - Dependentes,Sponsor - Área Funcional,Âmbito do Modelo,Natureza da Medida,Parâmetro,Segmento,Status de Modelo,Id Finding/Razão da Medida Nível 1,Finding/Razão da Medida,Id Obligation/Medida Nível 1,Obligation/Medida,Action Plan,Deadline Implementação,Nº of Extensions,Nº of Action Items,Tipo Action item - Dados,Tipo Action item - Processos,Tipo Action item - Metodologia,Recommendation/Recomendações,Limitation/Correcção,Severidade,Tipo de Deadline,Data de Implementação,Nível de Completude,Status,Observações,Observações - Detetor,Evidências de Implementação,Articulação com DCIPD,Ref WFMII,Modified,Created,Item Type,Path
+2,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,GDM,,,IFRS9,Deficiência de Documentos,,Todos os Segmentos,Em Produção,C.2,A documentação interna...,,Rever a documentação e...,,2024-09-30 16:00:00,,2.0,,,2.0,,,Risco Médio,Final,2024-03-20 00:00:00,,Em Validação Detetor,". Rec C.2 
+  #1 - NOB ...",,GDM_202312 Action plan...,,5377760044,2024-11-26 06:42:39,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+1,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,DRG,,,IFRS9,Governance,,Todos os Segmentos,Em Produção,C.1,Aprovação e envolvimen...,,Assegurar as atividade...,,2022-07-30 16:00:00,,,,,,,,Risco Médio,Final,2022-05-11 16:00:00,,Concluída,Medida encerrada confo...,,Relatório do Auditor E...,,3091442080,2024-10-30 07:44:27,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+3,Auditor Externo,Relatório do Auditor E...,2021-10-28 16:00:00,GVM,,,IFRS9,Governance,,,Em Produção,C.6,De  acordo com o Aviso...,,O GVM deve continuar a...,,2022-12-30 16:00:00,,,,,,,,Risco Baixo,Final,2023-03-01 00:00:00,,Concluída,". The Validation Unit,...",,RE Medida C_6 Relatóri...,,3026025782,2024-01-15 01:44:10,2022-06-30 06:17:35,Item,sites/ComitdeModelos/L...
+</dataframe>
+
+<conversation>
+User: Qual a natureza da medida mais frequente?
+
+
+</conversation>
+
+This is the initial python function. Do not change the params. Given the context, use the right dataframes.
+```python
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+```
+
+Take a deep breath and reason step-by-step. Act as a senior data analyst.
+In the answer, you must never write the "technical" names of the tables.
+Based on the last message in the conversation:
+- return the updated analyze_data function wrapped within ```python ```
+2024-12-04 18:48:36 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-04 18:48:36 [INFO] Code generated:
+```
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "temp_chart.png" }
+    """
+    natureza_medida_frequente = dfs[0]['Natureza da Medida'].mode()[0]
+    
+    return {"type": "string", "value": f"A natureza da medida mais frequente é: {natureza_medida_frequente}"}
+```
+
+2024-12-04 18:48:36 [INFO] Saving charts to C:\Users\Admin\Desktop\ModelMate_statistics\temp_chart.png
+2024-12-04 18:48:36 [INFO] 
+Code running:
+```
+def analyze_data(dfs: list[pd.DataFrame]) ->dict:
+    """
+    Analyze the data, using the provided dataframes (`dfs`).
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart you must save it as an image in C:/Users/Admin/Desktop/ModelMate_statistics/temp_chart.png and not show the chart.)
+    If the user requests to create a chart, utilize the Python matplotlib library to generate high-quality graphics that will be saved directly to a file.
+    At the end, return a dictionary of:
+    - type (possible values "string", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary)
+    Examples: 
+        { "type": "string", "value": f"The highest salary is {highest_salary}." }
+        or
+        { "type": "number", "value": 125 }
+        or
+        { "type": "dataframe", "value": pd.DataFrame({...}) }
+        or
+        { "type": "plot", "value": "C:/Users/Admin/Desktop/ModelMate_statistics/temp_chart.png" }
+    """
+    natureza_medida_frequente = dfs[0]['Natureza da Medida'].mode()[0]
+    return {'type': 'string', 'value': f'A natureza da medida mais frequente é: {natureza_medida_frequente}'}
+        ```
+2024-12-04 18:48:36 [INFO] Answer: {'type': 'string', 'value': 'A natureza da medida mais frequente é: Deficiência de Modelo'}
+2024-12-04 18:48:36 [INFO] Executed in: 3.2650811672210693s
