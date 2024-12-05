@@ -114,9 +114,9 @@ if indicator == "Analyse data":
                    .applymap(format_number))
 
     display_dataframe_as_html_table(num_statistics_df, min_column_widths={
-        'Nº of Extensions': 140,
-        'Nº of Action Items': 150,
-        'Tipo Action item - Dados': 300,
+        'Nº of Extensions': 100,
+        'Nº of Action Items': 100,
+        'Tipo Action item - Dados': 120,
         'Tipo Action item - Processos': 130,
         'Tipo Action item - Metodologia': 220
         })
