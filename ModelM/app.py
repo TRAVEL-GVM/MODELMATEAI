@@ -122,6 +122,8 @@ elif indicator == "ModelMate GPT":
     with st.expander("🔎 Dataframe Preview"):
         st.write(df.tail(5))
 
+    st.write(api_key)
+
     query = st.text_area("🗣️ Chat with Dataframe")
     container = st.container()
 
