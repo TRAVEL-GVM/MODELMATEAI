@@ -122,7 +122,7 @@ elif indicator == "ModelMate GPT":
     with st.expander("🔎 Dataframe Preview"):
         st.write(df.tail(5))
 
-    st.write(st.secrets["openai"]["api_key"])
+    #st.write(st.secrets["openai"]["api_key"])
 
     query = st.text_area("🗣️ Chat with Dataframe")
     container = st.container()
@@ -140,7 +140,7 @@ elif indicator == "ModelMate GPT":
                     },
                 )
                 
-                st.write("Sending query to OpenAI API...")
+                #st.write("Sending query to OpenAI API...")
                 answer = query_engine.chat(query)
                 
                 # Verificar a resposta
