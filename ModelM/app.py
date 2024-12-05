@@ -128,8 +128,7 @@ if indicator == "Analyse data":
                                    min_column_widths={'Action Plan': 100,
                                                       'Limitation/Correcção': 100,
                                                       'Recommendation/Recomendações': 100,
-                                                      'Sponsor - Área Funcional': 100,
-                                                      'Tipo Action item - Processos': 100
+                                                      'Sponsor - Área Funcional': 100
                                                      }
                                        )
     
