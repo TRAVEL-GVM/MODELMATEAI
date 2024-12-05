@@ -127,18 +127,19 @@ elif indicator == "ModelMate GPT":
     query = st.text_area("🗣️ Chat with Dataframe")
     container = st.container()
 
-    if query:
-        llm = OpenAI(api_token=api_key)
-        query_engine = SmartDataframe(
-            df,
-            config={
-                "llm": llm,
-                "response_parser": StreamlitResponse,
-                "callback": StreamlitCallback(container),
-            },
-        )
-
-        try:
-            answer = query_engine.chat(query)
-        except Exception as e:
-            st.error(f"Error: {e}")
+    if st.button("Send"):
+        if query:
+            llm = OpenAI(api_token=api_key)
+            query_engine = SmartDataframe(
+                df,
+                config={
+                    "llm": llm,
+                    "response_parser": StreamlitResponse,
+                    "callback": StreamlitCallback(container),
+                },
+            )
+    
+            try:
+                answer = query_engine.chat(query)
+            except Exception as e:
+                st.error(f"Error: {e}")
