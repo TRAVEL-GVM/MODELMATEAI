@@ -144,7 +144,7 @@ elif indicator == "ModelMate GPT":
                 answer = query_engine.chat(query)
                 
                 # Verificar a resposta
-                st.write("Resposta do chat:", answer)
+                #st.write("Resposta do chat:", answer)
     
                 st.write("Query processed.")
             except Exception as e:
