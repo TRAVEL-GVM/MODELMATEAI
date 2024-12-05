@@ -124,7 +124,15 @@ if indicator == "Analyse data":
                     
 
     st.header("Missing values")
-    display_dataframe_as_html_table(null_percentage_table(filtered_df))
+    display_dataframe_as_html_table(null_percentage_table(filtered_df),
+                                   min_column_widths={
+        'Action Plan': 100,
+        'Limitation/Correcção': 100,
+        'Recommendation/Recomendações': 100,
+        'Sponsor - Área Funcional': 100,
+        'Tipo Action item - Processos': 100
+                                       )
+    
     #st.write(null_percentage_table(filtered_df))
 
     st.title('Variables distribution')
