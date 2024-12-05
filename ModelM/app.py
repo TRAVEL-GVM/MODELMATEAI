@@ -142,8 +142,13 @@ elif indicator == "ModelMate GPT":
                 
                 st.write("Sending query to OpenAI API...")
                 answer = query_engine.chat(query)
+                
+                # Verificar a resposta
+                st.write("Resposta do chat:", answer)
+    
                 st.write("Query processed.")
             except Exception as e:
                 st.error(f"Error: {e}")
                 st.write(f"Traceback: {str(e)}")
+
     
