@@ -118,14 +118,7 @@ if indicator == "Analyse data":
         'Nº Action Items': 150,
         'Tipo Action item - Dados': 300,
         'Tipo Action item - Processos': 130,
-        'Tipo Action item - Metodologia': 220,
-        'Parâmetro': 200,
-        'Status de Modelo': 250,
-        'Severidade': 170,
-        'Tipo de Deadline': 170,
-        'Status': 170,
-        'Observações - Detetor': 1500
-
+        'Tipo Action item - Metodologia': 220
         })
 
     st.header("Missing values")
