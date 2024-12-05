@@ -138,4 +138,7 @@ elif indicator == "ModelMate GPT":
             },
         )
 
-        answer = query_engine.chat(query)
+        try:
+            answer = query_engine.chat(query)
+        except Exception as e:
+            st.error(f"Error: {e}")
