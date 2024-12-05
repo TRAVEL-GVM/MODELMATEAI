@@ -118,7 +118,7 @@ if indicator == "Analyse data":
         'Nº of Action Items': 100,
         'Tipo Action item - Dados': 120,
         'Tipo Action item - Processos': 130,
-        'Tipo Action item - Metodologia': 220
+        'Tipo Action item - Metodologia': 130
         })
                                    
                     
