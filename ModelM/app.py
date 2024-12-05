@@ -129,17 +129,21 @@ elif indicator == "ModelMate GPT":
 
     if st.button("Send"):
         if query:
-            llm = OpenAI(api_token=api_key)
-            query_engine = SmartDataframe(
-                df,
-                config={
-                    "llm": llm,
-                    "response_parser": StreamlitResponse,
-                    "callback": StreamlitCallback(container),
-                },
-            )
-    
             try:
+                llm = OpenAI(api_token=api_key)
+                query_engine = SmartDataframe(
+                    df,
+                    config={
+                        "llm": llm,
+                        "response_parser": StreamlitResponse,
+                        "callback": StreamlitCallback(container),
+                    },
+                )
+                
+                st.write("Sending query to OpenAI API...")
                 answer = query_engine.chat(query)
+                st.write("Query processed.")
             except Exception as e:
                 st.error(f"Error: {e}")
+                st.write(f"Traceback: {str(e)}")
+    
