@@ -121,7 +121,7 @@ if indicator == "Analyse data":
         'Tipo Action item - Metodologia': 220
         })
                                    
-                                   )
+                    
 
     st.header("Missing values")
     display_dataframe_as_html_table(null_percentage_table(filtered_df))
