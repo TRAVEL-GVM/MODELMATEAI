@@ -113,8 +113,7 @@ if indicator == "Analyse data":
                 .replace({np.nan: ''})
                    .applymap(format_number))
 
-    display_dataframe_as_html_table(num_statistics_df,
-                                   , min_column_widths={
+    display_dataframe_as_html_table(num_statistics_df, min_column_widths={
         'Nº of Extensions': 140,
         'Nº of Action Items': 150,
         'Tipo Action item - Dados': 300,
