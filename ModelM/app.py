@@ -101,7 +101,7 @@ if indicator == "Analyse data":
         })
 
     st.write('')
-    st.markdown("#### Summary statistics about numeric statistics:")
+    st.markdown("#### Summary statistics about numeric columns:")
 
     display_dataframe_as_html_table(filtered_df.describe().reset_index(names='').drop(columns=['ID']).replace({np.nan: ''}))
 
