@@ -272,3 +272,9 @@ def set_horizontal_scrollbar_style():
     )
 
 
+def format_number(x):
+    if isinstance(x, (int, float)):
+        return f"{x:.2f}".rstrip('0').rstrip('.')
+    return x
+
+
