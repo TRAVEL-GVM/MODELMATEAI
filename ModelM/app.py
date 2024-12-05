@@ -130,7 +130,7 @@ if indicator == "Analyse data":
         'Limitation/Correcção': 100,
         'Recommendation/Recomendações': 100,
         'Sponsor - Área Funcional': 100,
-        'Tipo Action item - Processos': 100
+        'Tipo Action item - Processos': 100}
                                        )
     
     #st.write(null_percentage_table(filtered_df))
