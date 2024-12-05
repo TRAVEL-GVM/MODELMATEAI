@@ -120,7 +120,7 @@ elif indicator == "ModelMate GPT":
     st.title("ModelMate GPT")
 
     with st.expander("🔎 Dataframe Preview"):
-        st.write(df.tail(5))
+        st.dataframe(df.tail(5), hide_index=True)
 
     #st.write(st.secrets["openai"]["api_key"])
 
