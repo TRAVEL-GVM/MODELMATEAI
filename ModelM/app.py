@@ -103,7 +103,14 @@ if indicator == "Analyse data":
     st.write('')
     st.markdown("#### Summary statistics about numeric columns:")
 
-    display_dataframe_as_html_table(filtered_df.describe().reset_index(names='').drop(columns=['ID']).replace({np.nan: ''}))
+    formatted_df = (filtered_df
+                .describe()
+                .reset_index(names='')
+                .drop(columns=['ID'])
+                .replace({np.nan: ''})
+                .applymap(format_number))
+
+    display_dataframe_as_html_table(formatted_df)
 
     st.header("Missing values")
     display_dataframe_as_html_table(null_percentage_table(filtered_df))
