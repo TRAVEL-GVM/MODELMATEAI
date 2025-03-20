@@ -84,7 +84,7 @@ if indicator == "Analyse data":
                           'Âmbito do Modelo', 'Natureza da Medida', 'Status de Modelo',
                           'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
 
-    st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
+    #st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
 
     st.write('')
     st.markdown("#### Summary statistics about numeric columns:")
