@@ -84,9 +84,7 @@ if indicator == "Analyse data":
                           'Âmbito do Modelo', 'Natureza da Medida', 'Parâmetro', 'Status de Modelo',
                           'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
 
-    st.write("Colunas disponíveis no DataFrame:", filtered_df.columns.tolist())
-    columns_not = [col for col in columns_to_display if col in filtered_df.columns]
-    st.write("problemas:", filtered_df.columns.tolist())    
+    st.dataframe(show_all_categorical_summary(filtered_df))  
 
     st.write('')
     st.markdown("#### Summary statistics about numeric columns:")
