@@ -80,7 +80,7 @@ if indicator == "Analyse data":
 
     st.markdown("#### Unique values and % of categorical columns:")
 
-    columns_to_display = ['Detetor', 'Sponsor - Área Funcional',
+    columns_to_display = ['Detetor', 'Sponsor - Área Funcional', 'Parâmetro',
                           'Âmbito do Modelo', 'Natureza da Medida', 'Status de Modelo',
                           'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
 
@@ -89,6 +89,7 @@ if indicator == "Analyse data":
         'Detetor': 140,
         'Sponsor - Área Funcional': 300,
         'Âmbito do Modelo': 130,
+        'Parâmetro': 100,
         'Natureza da Medida': 220,
         'Status de Modelo': 250,
         'Severidade': 170,
