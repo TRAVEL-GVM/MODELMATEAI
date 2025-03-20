@@ -82,8 +82,7 @@ if indicator == "Analyse data":
 
     columns_to_display = ['Detetor', 'Sponsor - Dependentes', 'Sponsor - Área Funcional',
                           'Âmbito do Modelo', 'Natureza da Medida', 'Parâmetro', 'Status de Modelo',
-                          'Severidade', 'Tipo de Deadline', 'Nível de Completude', 'Status', 'Observações - Detetor',
-                          'Articulação com DCIPD', 'Item Type', 'Path']
+                          'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
 
     display_dataframe_as_html_table(show_all_categorical_summary(filtered_df)[columns_to_display],  min_column_widths={
         'Detetor': 140,
@@ -95,8 +94,7 @@ if indicator == "Analyse data":
         'Status de Modelo': 250,
         'Severidade': 170,
         'Tipo de Deadline': 170,
-        'Status': 170,
-        'Observações - Detetor': 1500
+        'Status': 170
 
         })
 
@@ -114,11 +112,11 @@ if indicator == "Analyse data":
                    .applymap(format_number))
 
     display_dataframe_as_html_table(num_statistics_df, min_column_widths={
-        'Nº of Extensions': 100,
-        'Nº of Action Items': 100,
-        'Tipo Action item - Dados': 120,
-        'Tipo Action item - Processos': 130,
-        'Tipo Action item - Metodologia': 130
+        'Nº de Extensions': 100,
+        'Nº de Action Items': 100,
+        'Tipo Action Item - Data Quality': 120,
+        'Tipo Action Item - Processos/RWA': 130,
+        'Tipo Action Item - Metodologia/Documentação': 130
         })
                                    
                     
@@ -127,7 +125,7 @@ if indicator == "Analyse data":
     display_dataframe_as_html_table(null_percentage_table(filtered_df),
                                    min_column_widths={'Action Plan': 100,
                                                       'Limitation/Correcção': 100,
-                                                      'Recommendation/Recomendações': 100,
+                                                      'Recommendations/Recomendações': 100,
                                                       'Sponsor - Área Funcional': 100
                                                      }
                                        )
