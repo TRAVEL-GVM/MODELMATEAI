@@ -69,7 +69,7 @@ if indicator == "Analyse data":
     st.header("Filtered Data")
     st.sidebar.header("Filter Data")
     st.sidebar.write("To select all IDs select 0 in ID filter.")
-    filtered_df = df.copy() #apply_filters(df)
+    filtered_df = apply_filters(df)
 
     st.dataframe(filtered_df, hide_index=True)
 
