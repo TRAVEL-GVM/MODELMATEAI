@@ -7,7 +7,8 @@ from config import *
 
 
 def show_all_categorical_summary(df):
-    categorical_columns = df.select_dtypes(include=['object', 'category']).columns
+    categorical_columns = list(df.select_dtypes(include=['object', 'category']).columns)
+    categorical_columns.append('Parâmetro')
 
     summary_dict = {}
 
