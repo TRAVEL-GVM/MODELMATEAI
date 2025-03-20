@@ -129,30 +129,43 @@ def null_percentage_table(df):
 def apply_filters(df):
     st.sidebar.header("Filters")
 
-    filtered_df1 = df.copy()
+    filtered_df1 = df.copy()  # Evita modificar o DataFrame original diretamente
     categorical_columns = ['Status', 'Âmbito do Modelo', 'Segmento', 'Severidade', 'Detetor', 'Sponsor',
                            'ID Finding/Razão da Medida Nível 1', 'ID Obligation/Medida Nível 1']
 
     for col in categorical_columns:
-        df[col] = df[col].astype(str)
+        if col in df.columns:
+            df[col] = df[col].astype(str)  # Converte a coluna para string
+        else:
+            st.warning(f"Coluna {col} não encontrada no DataFrame")
 
-    id_column = [col for col in df.columns if col.lower() == 'id'][0]
-    id_filter = st.sidebar.number_input('Filter by ID', min_value=0)
-    if id_filter > 0:
-        filtered_df1 = filtered_df1[filtered_df1[id_column] == id_filter]
+    # Verifica se a coluna 'ID' existe antes de filtrar
+    id_column = [col for col in df.columns if col.lower() == 'id']
+    if id_column:
+        id_column = id_column[0]
+        id_filter = st.sidebar.number_input('Filter by ID', min_value=0)
+        
+        # Aplica o filtro de ID apenas se o valor for maior que 0
+        if id_filter > 0:
+            filtered_df1 = filtered_df1[filtered_df1[id_column] == id_filter]
 
+    # Aplicar filtros para colunas categóricas
     for col in categorical_columns:
-        unique_values = sorted(df[col].unique())
-        selected_values = st.sidebar.multiselect(
-            f'Select {col}',
-            unique_values,
-            default=[]
-        )
+        if col in df.columns:
+            unique_values = sorted(df[col].unique())
+            selected_values = st.sidebar.multiselect(
+                f'Select {col}',
+                unique_values,
+                default=[]
+            )
 
-        if selected_values:
-            filtered_df1 = filtered_df1[filtered_df1[col].isin(selected_values)]
+            if selected_values:
+                filtered_df1 = filtered_df1[filtered_df1[col].isin(selected_values)]
+        else:
+            st.warning(f"Coluna {col} não encontrada no DataFrame")
 
     return filtered_df1
+
 
 
 def display_dataframe_as_html_table_v2(df, min_column_widths=None, row_height=20):
