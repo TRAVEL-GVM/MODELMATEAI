@@ -89,7 +89,8 @@ if indicator == "Analyse data":
         'Detetor': 140,
         'Sponsor - Área Funcional': 300,
         'Âmbito do Modelo': 130,
-        'Parâmetro': 100,
+         #'Parâmetro': 100,
+         # 'Sponsor - Dependentes': 150, # não reconhece como categoricas não sei porquê
         'Natureza da Medida': 220,
         'Status de Modelo': 250,
         'Severidade': 170,
