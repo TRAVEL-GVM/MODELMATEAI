@@ -80,11 +80,11 @@ if indicator == "Analyse data":
 
     st.markdown("#### Unique values and % of categorical columns:")
 
-    columns_to_display = ['Detetor', 'Sponsor - Dependentes', 'Sponsor - Área Funcional',
-                          'Âmbito do Modelo', 'Natureza da Medida', 'Parâmetro', 'Status de Modelo',
+    columns_to_display = ['Detetor', 'Sponsor - Área Funcional',
+                          'Âmbito do Modelo', 'Natureza da Medida', 'Status de Modelo',
                           'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
 
-    st.dataframe(show_all_categorical_summary(filtered_df))  
+    st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
 
     st.write('')
     st.markdown("#### Summary statistics about numeric columns:")
