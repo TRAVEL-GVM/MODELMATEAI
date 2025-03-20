@@ -129,7 +129,7 @@ def null_percentage_table(df):
 def apply_filters(df):
     st.sidebar.header("Filters")
 
-    filtered_df1 = df
+    filtered_df1 = df.copy()
     categorical_columns = ['Status', 'Âmbito do Modelo', 'Segmento', 'Severidade', 'Detetor', 'Sponsor',
                            'ID Finding/Razão da Medida Nível 1', 'ID Obligation/Medida Nível 1']
 
