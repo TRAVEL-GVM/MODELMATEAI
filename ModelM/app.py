@@ -84,19 +84,9 @@ if indicator == "Analyse data":
                           'Âmbito do Modelo', 'Natureza da Medida', 'Parâmetro', 'Status de Modelo',
                           'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
 
-    display_dataframe_as_html_table(show_all_categorical_summary(filtered_df)[columns_to_display],  min_column_widths={
-        'Detetor': 140,
-        'Sponsor - Dependentes': 150,
-        'Sponsor - Área Funcional': 300,
-        'Âmbito do Modelo': 130,
-        'Natureza da Medida': 220,
-        'Parâmetro': 200,
-        'Status de Modelo': 250,
-        'Severidade': 170,
-        'Tipo de Deadline': 170,
-        'Status': 170
-
-        })
+    st.write("Colunas disponíveis no DataFrame:", filtered_df.columns.tolist())
+    columns_not = [col for col in columns_to_display if col in filtered_df.columns]
+    st.write("problemas:", filtered_df.columns.tolist())    
 
     st.write('')
     st.markdown("#### Summary statistics about numeric columns:")
