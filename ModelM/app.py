@@ -84,8 +84,18 @@ if indicator == "Analyse data":
                           'Âmbito do Modelo', 'Natureza da Medida', 'Status de Modelo',
                           'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
 
-    st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
-
+    #st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
+    display_dataframe_as_html_table(show_all_categorical_summary(filtered_df)[columns_to_display],  min_column_widths={
+        'Detetor': 140,
+        'Sponsor - Área Funcional': 300,
+        'Âmbito do Modelo': 130,
+        'Natureza da Medida': 220,
+        'Status de Modelo': 250,
+        'Severidade': 170,
+        'Tipo de Deadline': 170,
+        'Status': 170
+        })
+    
     st.write('')
     st.markdown("#### Summary statistics about numeric columns:")
 
