@@ -131,7 +131,7 @@ def apply_filters(df):
 
     filtered_df1 = df
     categorical_columns = ['Status', 'Âmbito do Modelo', 'Segmento', 'Severidade', 'Detetor', 'Sponsor',
-                           'Id Finding/Razão da Medida Nível 1', 'Id Obligation/Medida Nível 1']
+                           'ID Finding/Razão da Medida Nível 1', 'ID Obligation/Medida Nível 1']
 
     for col in categorical_columns:
         df[col] = df[col].astype(str)
