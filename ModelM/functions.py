@@ -66,7 +66,11 @@ def display_dataframe_as_html_table(df, min_column_widths=None):
     # Add custom column width CSS if specified
     if min_column_widths:
         for col, width in min_column_widths.items():
-            css += f"th:nth-child({df.columns.get_loc(col) + 1}), td:nth-child({df.columns.get_loc(col) + 1}) {{ min-width: {width}px; }}\n"
+            if col in df.columns:
+                # Applies the custom width only if the column exists
+                css += f"th:nth-child({df.columns.get_loc(col) + 1}), td:nth-child({df.columns.get_loc(col) + 1}) {{ min-width: {width}px; }}\n"
+            else:
+                st.warning(f"Coluna {col} não encontrada no DataFrame")
 
     css += "</style>\n"
 
@@ -75,6 +79,7 @@ def display_dataframe_as_html_table(df, min_column_widths=None):
 
     # Display in Streamlit
     st.markdown(full_html, unsafe_allow_html=True)
+
 
 
 def plot_distribution(df, column_name):
