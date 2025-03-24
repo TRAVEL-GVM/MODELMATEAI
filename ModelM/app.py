@@ -200,27 +200,30 @@ elif indicator == "ModelMate GPT":
         st.markdown(f"""
         <div style='text-align: center; margin-bottom: 30px;'>
             <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
-            <p style='color: #666; font-size: 16px;'>Seu assistente inteligente para análise de dados</p>
+            <p style='color: #666; font-size: 16px;'>Your AI assistant for Model Mate insights</p>
         </div>
         """, unsafe_allow_html=True)
 
         # Seção de visualização de dados
-        with st.expander("🔍 Pré-visualização dos Dados (Amostra aleatória)", expanded=False):
+        with st.expander("🔍 Data preview (Random sample)", expanded=False):
             st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
 
-
-            show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
+         show_code = st.toggle(
+                    "👨💻 Show code",
+                    help="🔧 Show Python code generated in the backend.",
+                    key="show_code_toggle", value=False)
  
         query = st.text_area(
-        "💡 Faça sua pergunta sobre os dados:",
+        "💡 Make your question about the data:",
         height=150,
-        placeholder="Exemplo: Mostre a distribuição de frequência por detector",
-        help="Digite sua pergunta em linguagem natural para analisar os dados",
+        placeholder="Example: Make a bar plot of the frequency of each detector. The bars must be green.",
+        help="Write your question in natural language for data analysis/querying outputs",
         key="gpt_textarea"
         )
         container = st.container()
         if st.button("Send"):
             if query:
+                with st.spinner("Processing your prompt... ⏳"):
                 try:
                     llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
                     query_engine = SmartDataframe(
@@ -232,7 +235,7 @@ elif indicator == "ModelMate GPT":
                         },
                     )
                     answer = query_engine.chat(query)
-                    st.write("Query processed.")
+                    st.toast("✅ Análise concluída com sucesso!", icon="✅")
                 except Exception as e:
                     st.error(f"Error: {e}")
                     st.write(f"Traceback: {str(e)}")
