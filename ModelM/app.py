@@ -16,26 +16,24 @@ from pandasai.llm import OpenAI
 from pandasai.responses.response_parser import ResponseParser
 
 
-# 1️⃣ Classe Callback (Versão Robustecida)
-class StreamlitCallback(BaseCallback):
+class CodeStorageCallback(BaseCallback):
+    """Armazena o código gerado sem interferir na saída principal"""
     def __init__(self):
-        self._container = st.container()
-        
+        self.code = None
+    
     def on_code(self, response: str):
-        st.session_state.last_generated_code = response
+        self.code = response
+        st.session_state.last_code = response  # Guarda na sessão
 
-# 2️⃣ Classe ResponseParser (Implementação Oficial)
-class StreamlitResponse(ResponseParser):
-    def __init__(self, context=None, **kwargs):
-        super().__init__(context, **kwargs)
-        
+class CleanResponse(ResponseParser):
+    """Exibe os resultados de forma limpa"""
     def format(self, output):
         if output["type"] == "dataframe":
-            st.dataframe(output["value"])
+            st.dataframe(output["value"], use_container_width=True)
         elif output["type"] == "plot":
             st.image(output["value"])
         else:
-            st.write(output["value"])
+            st.markdown(f"**Resposta:**\n\n{output['value']}")
 
 
 df = get_mm_data()
@@ -139,38 +137,70 @@ if indicator == "Analyse data":
 elif indicator == "ModelMate GPT":
     st.title("ModelMate GPT")
 
-    if "last_generated_code" not in st.session_state:
-        st.session_state.last_generated_code = None
+    # Inicializa variáveis de sessão
+if 'last_code' not in st.session_state:
+    st.session_state.last_code = None
+if 'last_result' not in st.session_state:
+    st.session_state.last_result = None
+
+# ================================================
+# 3️⃣ INTERFACE PRINCIPAL
+# ================================================
+tab1, tab2 = st.tabs(["🔍 Consulta", "⚙️ Configurações"])
+
+with tab1:
+    with st.expander("📂 Visualização rápida dos dados"):
+        st.dataframe(df.head(3), hide_index=True, use_container_width=True)
+
+    # Área de consulta
+    user_query = st.text_area("💬 Digite sua pergunta sobre os dados:", height=100)
     
-    with st.expander("🔍 Visualizar Dados"):
-        st.dataframe(df.head(3))
-    
-    # Interface principal
-    user_query = st.text_area("💬 Faça sua pergunta sobre os dados:")
-    
-    if st.button("🚀 Processar"):
+    if st.button("🚀 Executar análise", type="primary"):
         if user_query:
-            with st.spinner("Analisando dados..."):
+            with st.spinner("Processando..."):
                 try:
-                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                    callback = CodeStorageCallback()
                     
+                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
                     query_engine = SmartDataframe(
                         df,
                         config={
                             "llm": llm,
-                            "response_parser": StreamlitResponse,  # Classe, não instância
-                            "callback": StreamlitCallback(),
-                            "enable_cache": False,
+                            "response_parser": CleanResponse,
+                            "callback": callback,
+                            "verbose": False,
                         },
                     )
                     
-                    response = query_engine.chat(user_query)
-                    st.success("Análise concluída!")
+                    result = query_engine.chat(user_query)
+                    st.session_state.last_result = result
+                    st.toast("✅ Análise concluída!", icon="✅")
                     
                 except Exception as e:
-                    st.error(f"Erro: {str(e)}")
-    
-    # Mostrar código gerado (se existir)
-    if st.session_state.last_generated_code:
-        if st.toggle("👨💻 Mostrar código Python gerado"):
-            st.code(st.session_state.last_generated_code, language="python")
+                    st.error(f"Erro na análise: {str(e)}")
+
+# Seção de resultados (SEMPRE visível)
+if st.session_state.last_result:
+    st.divider()
+    st.subheader("📝 Resultados da Análise")
+    if isinstance(st.session_state.last_result, pd.DataFrame):
+        st.dataframe(st.session_state.last_result, use_container_width=True)
+    else:
+        st.markdown(st.session_state.last_result)
+
+# Seção de código (OPCIONAL)
+if st.session_state.last_code:
+    st.divider()
+    with st.expander("👨💻 Código Python gerado (Clique para expandir)", expanded=False):
+        st.code(st.session_state.last_code, language="python")
+
+with tab2:
+st.markdown("### Configurações avançadas")
+debug_mode = st.checkbox("Modo desenvolvedor (mostrar metadados técnicos)")
+
+if debug_mode and st.session_state.last_code:
+    st.json({
+        "query": user_query,
+        "code_size": f"{len(st.session_state.last_code)} bytes",
+        "pandasai_version": st.__version__
+    })
