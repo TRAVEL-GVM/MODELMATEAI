@@ -146,9 +146,8 @@ if indicator == "Analyse data":
     plot_distribution(df, column)
  
 elif indicator == "ModelMate GPT":
-   st.title("ModelMate GPT")
-
-   st.markdown("""
+    # Configuração de estilo específica para o GPT
+    st.markdown("""
     <style>
         .gpt-container {
             background-color: #ffffff;
@@ -196,35 +195,37 @@ elif indicator == "ModelMate GPT":
     </style>
     """, unsafe_allow_html=True)
 
-   with st.container():
+    # Container principal
+    with st.container():
         st.markdown(f"""
-           <div style='text-align: center; margin-bottom: 30px;'>
-           <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
-           <p style='color: #666; font-size: 16px;'>Your AI assistant Model Mate analysis</p>
-           </div>
+        <div style='text-align: center; margin-bottom: 30px;'>
+            <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
+            <p style='color: #666; font-size: 16px;'>Seu assistente inteligente para análise de dados</p>
+        </div>
         """, unsafe_allow_html=True)
- 
-     with st.expander("🔎 Dataframe Preview"):
-         st.dataframe(df.tail(5), hide_index=True)
-  
-     show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
-  
-     query = st.text_area("🗣️ Chat with Dataframe")
-     container = st.container()
-     if st.button("Send"):
-         if query:
-             try:
-                 llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                 query_engine = SmartDataframe(
-                     df,
-                     config={
-                         "llm": llm,
-                         "response_parser": StreamlitResponse,
-                         "callback": StreamlitCallback_v2(container, show_code=show_code)
-                     },
-                 )
-                 answer = query_engine.chat(query)
-                 st.write("Query processed.")
-             except Exception as e:
-                 st.error(f"Error: {e}")
-                 st.write(f"Traceback: {str(e)}")
+
+        # Seção de visualização de dados
+        with st.expander("🔍 Pré-visualização dos Dados (Amostra aleatória)", expanded=False):
+            st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
+     
+        show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
+     
+        query = st.text_area("🗣️ Chat with Dataframe")
+        container = st.container()
+        if st.button("Send"):
+            if query:
+                try:
+                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                    query_engine = SmartDataframe(
+                        df,
+                        config={
+                            "llm": llm,
+                            "response_parser": StreamlitResponse,
+                            "callback": StreamlitCallback_v2(container, show_code=show_code)
+                        },
+                    )
+                    answer = query_engine.chat(query)
+                    st.write("Query processed.")
+                except Exception as e:
+                    st.error(f"Error: {e}")
+                    st.write(f"Traceback: {str(e)}")
