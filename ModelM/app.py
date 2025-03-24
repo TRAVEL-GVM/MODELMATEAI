@@ -208,7 +208,7 @@ elif indicator == "ModelMate GPT":
         with st.expander("🔍 Data preview (Random sample)", expanded=False):
             st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
 
-         show_code = st.toggle(
+        show_code = st.toggle(
                     "👨💻 Show code",
                     help="🔧 Show Python code generated in the backend.",
                     key="show_code_toggle", value=False)
