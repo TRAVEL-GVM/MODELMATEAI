@@ -208,47 +208,34 @@ elif indicator == "ModelMate GPT":
         with st.expander("🔍 Pré-visualização dos Dados (Amostra aleatória)", expanded=False):
             st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
 
-    with st.form("gpt_query_form"):
+
+            show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
+ 
         query = st.text_area(
         "💡 Faça sua pergunta sobre os dados:",
         height=150,
         placeholder="Exemplo: Mostre a distribuição de frequência por detector",
         help="Digite sua pergunta em linguagem natural para analisar os dados",
         key="gpt_textarea"
-    )
+        )
+        container = st.container()
+        if st.button("Send"):
+            if query:
+                try:
+                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                    query_engine = SmartDataframe(
+                        df,
+                        config={
+                            "llm": llm,
+                            "response_parser": StreamlitResponse,
+                            "callback": StreamlitCallback_v2(container, show_code=show_code)
+                        },
+                    )
+                    answer = query_engine.chat(query)
+                    st.write("Query processed.")
+                except Exception as e:
+                    st.error(f"Error: {e}")
+                    st.write(f"Traceback: {str(e)}")
+
+
     
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        submit_button = st.form_submit_button(
-            "🚀 Analisar Dados",
-            use_container_width=True,
-            help="Clique para processar sua pergunta"
-        )
-    with col2:
-        show_code = st.toggle(
-            "💻 Mostrar código Python",
-            help="Exibir o código gerado pelo sistema",
-            key="show_code_toggle"
-        )
-
-    #show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
- 
-    if submit_button and query:
-        with st.spinner("Processando sua pergunta... ⏳"):
-             try:
-                 llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                 result_container = st.container()
-
-                 query_engine = SmartDataframe(
-                     df,
-                     config={
-                         "llm": llm,
-                         "response_parser": StreamlitResponse,
-                         "callback": StreamlitCallback_v2(result_container, show_code=show_code)
-                     },
-                 )
-                 answer = query_engine.chat(query)
-                 st.toast("✅ Análise concluída com sucesso!", icon="✅")
-             except Exception as e:
-                 st.error(f"Error: {e}")
-                 st.write(f"Traceback: {str(e)}")
