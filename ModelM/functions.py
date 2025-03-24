@@ -297,45 +297,27 @@ def format_number(x):
 
 
 
-def plot_distribution_v2(df, column_name):
+def plot_distribution_v2(df, column_name, width=6):
     """
-    Gera um gráfico de distribuição para a variável selecionada do DataFrame.
+    Args:
+        width: Largura desejada em polegadas (padrão: 6")
+    """
+    # Calcular altura proporcional
+    height = width * 0.5  # Proporção 2:1 (largura:altura)
     
-    :param df: DataFrame com os dados
-    :param column_name: Nome da coluna para plotagem
-    """
-    if column_name in df.select_dtypes(include=['float64', 'int']).columns:
-        # Configuração do estilo
-        sns.set_style("whitegrid")
-        
-        # Cria figura com tamanho controlado
-        fig, ax = plt.subplots(figsize=(5, 5))
-        
-        # Plotagem do histograma
-        sns.histplot(
-            data=df,
-            x=column_name,
-            kde=True,
-            bins=20,
-            color=default_color1,
-            ax=ax
-        )
-        
-        # Ajustes estéticos
-        ax.set_title(f'Distribution of {column_name}', fontsize=10, pad=10)
-        ax.set_xlabel(column_name, fontsize=9)
-        ax.set_ylabel('Frequency', fontsize=9)
-        ax.tick_params(labelsize=8)
-        
-        # Remove bordas desnecessárias
-        sns.despine()
-        
-        # Exibe no Streamlit dentro de um container
-        with st.container(border=True):
-            st.pyplot(fig, use_container_width=True)
-        
-        plt.close(fig)
-    else:
-        st.error(f"A coluna '{column_name}' não é numérica ou não existe no DataFrame.")
+    fig, ax = plt.subplots(figsize=(width, height))
+    sns.histplot(data=df, x=column_name, kde=True, ax=ax)
+    
+    # Ajustes estéticos
+    plt.title(f"Distribuição de {column_name}", pad=10)
+    plt.tight_layout()
+    
+    # Container para controle preciso
+    with st.container():
+        st.pyplot(fig, use_container_width=False)
+    plt.close(fig)
+
+# Uso:
+plot_distribution(df, "Nº de Action Items", width=5)  # 5 polegadas de largura
 
 
