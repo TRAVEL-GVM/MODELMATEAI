@@ -317,7 +317,6 @@ def plot_distribution_v2(df, column_name, width=6):
         st.pyplot(fig, use_container_width=False)
     plt.close(fig)
 
-# Uso:
-plot_distribution(df, "Nº de Action Items", width=5)  # 5 polegadas de largura
+
 
 
