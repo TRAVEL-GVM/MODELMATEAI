@@ -233,7 +233,7 @@ elif indicator == "ModelMate GPT":
 
     #show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
  
-    if if submit_button and query:
+    if submit_button and query:
         with st.spinner("Processando sua pergunta... ⏳"):
              try:
                  llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
