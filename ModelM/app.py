@@ -16,27 +16,27 @@ from pandasai.llm import OpenAI
 from pandasai.responses.response_parser import ResponseParser
 
 
-# 1️⃣ Classe Callback (armazena código na session_state)
+# 1️⃣ Classe Callback
 class StreamlitCallback(BaseCallback):
-    def __init__(self, container) -> None:
-        self.container = container
-
+    def __init__(self, container=None) -> None:
+        self.container = container or st.container()
+        
     def on_code(self, response: str):
-        st.session_state.generated_code = response  # Guarda o código
+        if "generated_code" not in st.session_state:
+            st.session_state.generated_code = response
 
-# 2️⃣ Classe Response (exibe resposta normal)
+# 2️⃣ Classe ResponseParser corrigida
 class StreamlitResponse(ResponseParser):
-    def __init__(self, context) -> None:
+    def __init__(self, context=None) -> None:
         super().__init__(context)
-
-    def format_dataframe(self, result):
-        st.dataframe(result["value"])
-
-    def format_plot(self, result):
-        st.image(result["value"])
-
-    def format_other(self, result):
-        st.write(result["value"])
+        
+    def format(self, result):
+        if result["type"] == "dataframe":
+            st.dataframe(result["value"])
+        elif result["type"] == "plot":
+            st.image(result["value"])
+        else:
+            st.write(result["value"])
 
 
 df = get_mm_data()
@@ -149,20 +149,23 @@ elif indicator == "ModelMate GPT":
     query = st.text_area("🗣️ Chat with Data")
     if st.button("Send Query"):
         if query:
-            llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-            query_engine = SmartDataframe(
-                df,
-                config={
-                    "llm": llm,
-                    "response_parser": StreamlitResponse(st.container()),
-                    "callback": StreamlitCallback(st.container()),  # Só armazena, não exibe
-                    "verbose": False,
-                },
-            )
-            answer = query_engine.chat(query)
-            st.success("✅ Done!")
+            try:
+                llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                query_engine = SmartDataframe(
+                    df,
+                    config={
+                        "llm": llm,
+                        "response_parser": StreamlitResponse(),  # Corrigido
+                        "callback": StreamlitCallback(),
+                        "verbose": False,
+                    },
+                )
+                answer = query_engine.chat(query)
+                st.success("✅ Done!")
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
     
-    # 4️⃣ Botão para mostrar código (se existir)
+    # Botão para mostrar código
     if st.session_state.generated_code:
         if st.button("👨💻 Show Generated Code"):
             st.code(st.session_state.generated_code)
