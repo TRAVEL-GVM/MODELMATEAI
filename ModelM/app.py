@@ -230,13 +230,10 @@ elif indicator == "ModelMate GPT":
                     help="🔧 Show Python code generated in the backend.",
                     key="show_code_toggle"
                 )
-     
-        #show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
-     
-        query = st.text_area("🗣️ Chat with Dataframe")
-        container = st.container()
-        if st.button("Send"):
-            if query:
+
+        # Processamento e resultados
+        if submit_button and query:
+            with st.spinner("Processando sua pergunta... ⏳"):
                 try:
                     llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
                     query_engine = SmartDataframe(
@@ -252,3 +249,4 @@ elif indicator == "ModelMate GPT":
                 except Exception as e:
                     st.error(f"Error: {e}")
                     st.write(f"Traceback: {str(e)}")
+   
