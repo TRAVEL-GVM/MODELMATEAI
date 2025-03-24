@@ -243,7 +243,7 @@ elif indicator == "ModelMate GPT":
                     result_container = st.container()
                     
                     # Configuração do callback
-                    callback = StreamlitCallback(result_container, show_code=show_code)
+                    callback = StreamlitCallback_v2(result_container, show_code=show_code)
                     
                     query_engine = SmartDataframe(
                         df,
