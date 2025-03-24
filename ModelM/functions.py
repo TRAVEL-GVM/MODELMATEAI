@@ -306,7 +306,7 @@ def plot_distribution_v2(df, column_name, width=6):
     height = width * 0.5  # Proporção 2:1 (largura:altura)
     
     fig, ax = plt.subplots(figsize=(width, height))
-    sns.histplot(data=df, x=column_name, kde=True, ax=ax)
+    sns.histplot(data=df, x=column_name, kde=True, ax=ax, color=default_color1)
     
     # Ajustes estéticos
     plt.title(f"Distribuição de {column_name}", pad=10)
