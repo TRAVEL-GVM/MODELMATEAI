@@ -146,8 +146,9 @@ if indicator == "Analyse data":
     plot_distribution(df, column)
  
 elif indicator == "ModelMate GPT":
-    # Configuração de estilo específica para o GPT
-    st.markdown("""
+   st.title("ModelMate GPT")
+
+   st.markdown("""
     <style>
         .gpt-container {
             background-color: #ffffff;
@@ -195,96 +196,35 @@ elif indicator == "ModelMate GPT":
     </style>
     """, unsafe_allow_html=True)
 
-    # Container principal
-    with st.container():
+   with st.container():
         st.markdown(f"""
-        <div style='text-align: center; margin-bottom: 30px;'>
-            <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
-            <p style='color: #666; font-size: 16px;'>Seu assistente inteligente para análise de dados</p>
-        </div>
+           <div style='text-align: center; margin-bottom: 30px;'>
+           <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
+           <p style='color: #666; font-size: 16px;'>Your AI assistant Model Mate analysis</p>
+           </div>
         """, unsafe_allow_html=True)
-
-        # Seção de visualização de dados
-        with st.expander("🔍 Pré-visualização dos Dados (Amostra aleatória)", expanded=False):
-            st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
-
-        # Área de consulta
-        with st.form("gpt_query_form"):
-            query = st.text_area(
-                "💡 Faça sua pergunta sobre os dados:",
-                height=150,
-                placeholder="Exemplo: Mostre a distribuição de frequência por detector",
-                help="Digite sua pergunta em linguagem natural para analisar os dados",
-                key="gpt_textarea"
-            )
-            
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                submit_button = st.form_submit_button(
-                    "🚀 Analisar Dados",
-                    use_container_width=True,
-                    help="Clique para processar sua pergunta"
+ 
+    with st.expander("🔎 Dataframe Preview"):
+        st.dataframe(df.tail(5), hide_index=True)
+ 
+    show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
+ 
+    query = st.text_area("🗣️ Chat with Dataframe")
+    container = st.container()
+    if st.button("Send"):
+        if query:
+            try:
+                llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                query_engine = SmartDataframe(
+                    df,
+                    config={
+                        "llm": llm,
+                        "response_parser": StreamlitResponse,
+                        "callback": StreamlitCallback_v2(container, show_code=show_code)
+                    },
                 )
-            with col2:
-                show_code = st.toggle(
-                    "👨💻 Mostrar código",
-                    help="Exibir o código Python gerado",
-                    key="show_code_toggle"
-                )
-
-        # Processamento e resultados
-        if submit_button and query:
-            with st.spinner("Processando sua pergunta... ⏳"):
-                try:
-                    # Configuração do PandasAI
-                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                    
-                    # Container para resultados
-                    result_container = st.container()
-                    
-                    # Configuração do callback
-                    callback = StreamlitCallback_v2(result_container, show_code=show_code)
-                    
-                    query_engine = SmartDataframe(
-                        df,
-                        config={
-                            "llm": llm,
-                            "response_parser": StreamlitResponse(result_container),
-                            "callback": callback,
-                            "verbose": False,
-                            "save_charts": True,
-                            "save_charts_path": "temp_charts"
-                        },
-                    )
-                    
-                    # Limpa gráficos anteriores
-                    os.makedirs("temp_charts", exist_ok=True)
-                    for file in glob.glob("temp_charts/*.png"):
-                        os.remove(file)
-                    
-                    # Executa a consulta
-                    response = query_engine.chat(query)
-                    
-                    # Exibe gráfico se foi gerado
-                    if os.path.exists("temp_charts/temp_chart.png"):
-                        with result_container:
-                            st.markdown("### 📊 Visualização Gerada")
-                            st.image("temp_charts/temp_chart.png", use_container_width=True)
-                    
-                    # Feedback visual
-                    st.toast("✅ Análise concluída com sucesso!", icon="✅")
-                    
-                except Exception as e:
-                    st.error(f"Erro ao processar sua solicitação: {str(e)}")
-                    st.markdown(f"""
-                    <div class='gpt-response'>
-                        <p style='color: #d32f2f;'>Ocorreu um erro ao processar sua pergunta.</p>
-                        <details>
-                            <summary>Detalhes técnicos</summary>
-                            <code>{str(e)}</code>
-                        </details>
-                    </div>
-                    """, unsafe_allow_html=True)
-        
-        elif submit_button and not query:
-            st.warning("Por favor, digite sua pergunta antes de clicar em Analisar Dados")
+                answer = query_engine.chat(query)
+                st.write("Query processed.")
+            except Exception as e:
+                st.error(f"Error: {e}")
+                st.write(f"Traceback: {str(e)}")
