@@ -144,8 +144,7 @@ elif indicator == "ModelMate GPT":
         st.session_state.generated_code = None  # Inicializa
 
     with st.expander("🔎 Data Preview"):
-        df = pd.read_csv("seu_arquivo.csv")  # Substitua pelo seu DataFrame
-        st.dataframe(df.tail(5))
+        st.dataframe(df.tail(5), hide_index=True)
     
     query = st.text_area("🗣️ Chat with Data")
     if st.button("Send Query"):
