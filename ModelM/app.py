@@ -207,8 +207,31 @@ elif indicator == "ModelMate GPT":
         # Seção de visualização de dados
         with st.expander("🔍 Pré-visualização dos Dados (Amostra aleatória)", expanded=False):
             st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
+
+        with st.form("gpt_query_form"):
+            query = st.text_area(
+                "💡 Faça sua pergunta sobre os dados:",
+                height=150,
+                placeholder="Exemplo: Mostre a distribuição de frequência por detector",
+                help="Digite sua pergunta em linguagem natural para analisar os dados",
+                key="gpt_textarea"
+            )
+            
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                submit_button = st.form_submit_button(
+                    "🚀 Analisar Dados",
+                    use_container_width=True,
+                    help="Clique para processar sua pergunta"
+                )
+            with col2:
+                show_code = st.toggle(
+                    "💻🔧Show Python code generated in the backend.",
+                    help="🔧 Show Python code generated in the backend.",
+                    key="show_code_toggle"
+                )
      
-        show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
+        #show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
      
         query = st.text_area("🗣️ Chat with Dataframe")
         container = st.container()
