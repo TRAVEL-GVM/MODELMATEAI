@@ -247,7 +247,7 @@ elif indicator == "ModelMate GPT":
                             </details>
                         </div>
                         """, unsafe_allow_html=True)
-         elif submit_button and not query:
+          elif submit_button and not query:
             st.warning("Por favor, digite sua pergunta antes de clicar em Analisar Dados")
 
 
