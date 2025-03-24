@@ -236,9 +236,9 @@ elif indicator == "ModelMate GPT":
                        )
                        answer = query_engine.chat(query)
                        st.toast("✅ Análise concluída com sucesso!", icon="✅")
-                except Exception as e:
-                    st.error(f"Error: {e}")
-                    st.write(f"Traceback: {str(e)}")
+                    except Exception as e:
+                       st.error(f"Error: {e}")
+                       st.write(f"Traceback: {str(e)}")
 
 
     
