@@ -88,7 +88,7 @@ if indicator == "Analyse data":
     #st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
     display_dataframe_as_html_table(show_all_categorical_summary(filtered_df)[columns_to_display],  min_column_widths={
         'Detetor': 140,
-        'Sponsor - Área Funcional': 300,
+         #'Sponsor - Área Funcional': 300,
         'Âmbito do Modelo': 130,
          #'Parâmetro': 100,
          # 'Sponsor - Dependentes': 150, # não reconhece como categoricas não sei porquê
