@@ -142,6 +142,8 @@ elif indicator == "ModelMate GPT":
         st.session_state.last_code = None
     if 'last_result' not in st.session_state:
         st.session_state.last_result = None
+    if 'last_plot' not in st.session_state:
+        st.session_state.last_plot = None
 
     # Container principal
     with st.container():
@@ -167,6 +169,8 @@ elif indicator == "ModelMate GPT":
                                 "response_parser": CleanResponse,
                                 "callback": callback,
                                 "verbose": False,
+                                "save_charts": True,  # Permite salvar gráficos
+                                "save_charts_path": "temp_charts",  # Pasta para salvar
                             },
                         )
                         
@@ -176,6 +180,10 @@ elif indicator == "ModelMate GPT":
                         # Armazena resultados
                         st.session_state.last_result = result
                         st.session_state.last_code = callback.code
+                        
+                        # Verifica se há gráfico gerado
+                        if os.path.exists("temp_charts/temp_chart.png"):
+                            st.session_state.last_plot = "temp_charts/temp_chart.png"
                         
                         st.success("Análise concluída com sucesso!")
                         
@@ -189,6 +197,9 @@ elif indicator == "ModelMate GPT":
             
             if isinstance(st.session_state.last_result, pd.DataFrame):
                 st.dataframe(st.session_state.last_result, use_container_width=True)
+            elif st.session_state.last_plot:
+                st.image(st.session_state.last_plot)
+                st.session_state.last_plot = None  # Limpa após exibir
             else:
                 st.write(st.session_state.last_result)
 
