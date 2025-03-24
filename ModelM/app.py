@@ -231,59 +231,58 @@ elif indicator == "ModelMate GPT":
                     key="show_code_toggle"
                 )
 
-       if submit_button and query:
-            with st.spinner("Processando sua pergunta... ⏳"):
-                try:
-                    # Configuração do PandasAI
-                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                    
-                    # Container para resultados
-                    result_container = st.container()
-                    
-                    # Configuração do callback
-                    callback = StreamlitCallback_v2(result_container, show_code=show_code)
-                    
-                    query_engine = SmartDataframe(
-                        df,
-                        config={
-                            "llm": llm,
-                            "response_parser": StreamlitResponse(result_container),
-                            "callback": callback,
-                            "verbose": False,
-                            "save_charts": True,
-                            "save_charts_path": "temp_charts"
-                        },
-                    )
-                    
-                    # Limpa gráficos anteriores
-                    os.makedirs("temp_charts", exist_ok=True)
-                    for file in glob.glob("temp_charts/*.png"):
-                        os.remove(file)
-                    
-                    # Executa a consulta
-                    response = query_engine.chat(query)
-                    
-                    # Exibe gráfico se foi gerado
-                    if os.path.exists("temp_charts/temp_chart.png"):
-                        with result_container:
-                            st.markdown("### 📊 Visualização Gerada")
-                            st.image("temp_charts/temp_chart.png", use_container_width=True)
-                    
-                    # Feedback visual
-                    st.toast("✅ Análise concluída com sucesso!", icon="✅")
-                    
-                except Exception as e:
-                    st.error(f"Erro ao processar sua solicitação: {str(e)}")
-                    st.markdown(f"""
-                    <div class='gpt-response'>
-                        <p style='color: #d32f2f;'>Ocorreu um erro ao processar sua pergunta.</p>
-                        <details>
-                            <summary>Detalhes técnicos</summary>
-                            <code>{str(e)}</code>
-                        </details>
-                    </div>
-                    """, unsafe_allow_html=True)
-        
-        elif submit_button and not query:
-            st.warning("Por favor, digite sua pergunta antes de clicar em Analisar Dados")
-   
+                    if submit_button and query:
+                with st.spinner("Processando sua pergunta... ⏳"):
+                    try:
+                        # Configuração do PandasAI
+                        llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                        
+                        # Container para resultados
+                        result_container = st.container()
+                        
+                        # Configuração do callback
+                        callback = StreamlitCallback_v2(result_container, show_code=show_code)
+                        
+                        query_engine = SmartDataframe(
+                            df,
+                            config={
+                                "llm": llm,
+                                "response_parser": StreamlitResponse(result_container),
+                                "callback": callback,
+                                "verbose": False,
+                                "save_charts": True,
+                                "save_charts_path": "temp_charts"
+                            },
+                        )
+                        
+                        # Limpa gráficos anteriores
+                        os.makedirs("temp_charts", exist_ok=True)
+                        for file in glob.glob("temp_charts/*.png"):
+                            os.remove(file)
+                        
+                        # Executa a consulta
+                        response = query_engine.chat(query)
+                        
+                        # Exibe gráfico se foi gerado
+                        if os.path.exists("temp_charts/temp_chart.png"):
+                            with result_container:
+                                st.markdown("### 📊 Visualização Gerada")
+                                st.image("temp_charts/temp_chart.png", use_container_width=True)
+                        
+                        # Feedback visual
+                        st.toast("✅ Análise concluída com sucesso!", icon="✅")
+                        
+                    except Exception as e:
+                        st.error(f"Erro ao processar sua solicitação: {str(e)}")
+                        st.markdown(f"""
+                        <div class='gpt-response'>
+                            <p style='color: #d32f2f;'>Ocorreu um erro ao processar sua pergunta.</p>
+                            <details>
+                                <summary>Detalhes técnicos</summary>
+                                <code>{str(e)}</code>
+                            </details>
+                        </div>
+                        """, unsafe_allow_html=True)
+            
+            elif submit_button and not query:
+                st.warning("Por favor, digite sua pergunta antes de clicar em Analisar Dados")
