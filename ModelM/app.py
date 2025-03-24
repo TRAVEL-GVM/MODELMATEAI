@@ -195,8 +195,8 @@ if st.session_state.last_code:
         st.code(st.session_state.last_code, language="python")
 
 with tab2:
-st.markdown("### Configurações avançadas")
-debug_mode = st.checkbox("Modo desenvolvedor (mostrar metadados técnicos)")
+    st.markdown("### Configurações avançadas")
+    debug_mode = st.checkbox("Modo desenvolvedor (mostrar metadados técnicos)")
 
 if debug_mode and st.session_state.last_code:
     st.json({
