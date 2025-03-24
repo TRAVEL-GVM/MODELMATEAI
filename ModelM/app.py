@@ -16,27 +16,26 @@ from pandasai.llm import OpenAI
 from pandasai.responses.response_parser import ResponseParser
 
 
-# 1️⃣ Classe Callback
+# 1️⃣ Classe Callback (Versão Robustecida)
 class StreamlitCallback(BaseCallback):
-    def __init__(self, container=None) -> None:
-        self.container = container or st.container()
+    def __init__(self):
+        self._container = st.container()
         
     def on_code(self, response: str):
-        if "generated_code" not in st.session_state:
-            st.session_state.generated_code = response
+        st.session_state.last_generated_code = response
 
-# 2️⃣ Classe ResponseParser corrigida
+# 2️⃣ Classe ResponseParser (Implementação Oficial)
 class StreamlitResponse(ResponseParser):
-    def __init__(self, context=None) -> None:
-        super().__init__(context)
+    def __init__(self, context=None, **kwargs):
+        super().__init__(context, **kwargs)
         
-    def format(self, result):
-        if result["type"] == "dataframe":
-            st.dataframe(result["value"])
-        elif result["type"] == "plot":
-            st.image(result["value"])
+    def format(self, output):
+        if output["type"] == "dataframe":
+            st.dataframe(output["value"])
+        elif output["type"] == "plot":
+            st.image(output["value"])
         else:
-            st.write(result["value"])
+            st.write(output["value"])
 
 
 df = get_mm_data()
@@ -140,32 +139,38 @@ if indicator == "Analyse data":
 elif indicator == "ModelMate GPT":
     st.title("ModelMate GPT")
 
-    if "generated_code" not in st.session_state:
-        st.session_state.generated_code = None  # Inicializa
-
-    with st.expander("🔎 Data Preview"):
-        st.dataframe(df.tail(5), hide_index=True)
+    if "last_generated_code" not in st.session_state:
+        st.session_state.last_generated_code = None
     
-    query = st.text_area("🗣️ Chat with Data")
-    if st.button("Send Query"):
-        if query:
-            try:
-                llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                query_engine = SmartDataframe(
-                    df,
-                    config={
-                        "llm": llm,
-                        "response_parser": StreamlitResponse(),  # Corrigido
-                        "callback": StreamlitCallback(),
-                        "verbose": False,
-                    },
-                )
-                answer = query_engine.chat(query)
-                st.success("✅ Done!")
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
+    with st.expander("🔍 Visualizar Dados"):
+        st.dataframe(df.head(3))
     
-    # Botão para mostrar código
-    if st.session_state.generated_code:
-        if st.button("👨💻 Show Generated Code"):
-            st.code(st.session_state.generated_code)
+    # Interface principal
+    user_query = st.text_area("💬 Faça sua pergunta sobre os dados:")
+    
+    if st.button("🚀 Processar"):
+        if user_query:
+            with st.spinner("Analisando dados..."):
+                try:
+                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                    
+                    query_engine = SmartDataframe(
+                        df,
+                        config={
+                            "llm": llm,
+                            "response_parser": StreamlitResponse,  # Classe, não instância
+                            "callback": StreamlitCallback(),
+                            "enable_cache": False,
+                        },
+                    )
+                    
+                    response = query_engine.chat(user_query)
+                    st.success("Análise concluída!")
+                    
+                except Exception as e:
+                    st.error(f"Erro: {str(e)}")
+    
+    # Mostrar código gerado (se existir)
+    if st.session_state.last_generated_code:
+        if st.toggle("👨💻 Mostrar código Python gerado"):
+            st.code(st.session_state.last_generated_code, language="python")
