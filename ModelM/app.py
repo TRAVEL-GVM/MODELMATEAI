@@ -24,6 +24,15 @@ class StreamlitCallback(BaseCallback):
     def on_code(self, response: str):
         self.container.code(response)
 
+class StreamlitCallback_v2(BaseCallback):
+    def __init__(self, container, show_code=False) -> None:  # Novo parâmetro
+        self.container = container
+        self.show_code = show_code  # Controla se o código é exibido
+
+    def on_code(self, response: str):
+        if self.show_code:  # Só mostra o código se show_code=True
+            self.container.code(response)
+
 
 class StreamlitResponse(ResponseParser):
     def __init__(self, context) -> None:
@@ -158,8 +167,7 @@ elif indicator == "ModelMate GPT":
                     config={
                         "llm": llm,
                         "response_parser": StreamlitResponse,
-                        "callback": StreamlitCallback(container),
-                        "verbose": False,  # Esta linha desativa a exibição do código
+                        "callback": StreamlitCallback(container, show_code=False)
                     },
                 )
                 
