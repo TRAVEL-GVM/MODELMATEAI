@@ -237,8 +237,18 @@ elif indicator == "ModelMate GPT":
                        answer = query_engine.chat(query)
                        st.toast("✅ Análise concluída com sucesso!", icon="✅")
                     except Exception as e:
-                       st.error(f"Error: {e}")
-                       st.write(f"Traceback: {str(e)}")
+                       st.error(f"Erro ao processar sua solicitação: {str(e)}")
+                       st.markdown(f"""
+                        <div class='gpt-response'>
+                            <p style='color: #d32f2f;'>Ocorreu um erro ao processar sua pergunta.</p>
+                            <details>
+                                <summary>Detalhes técnicos</summary>
+                                <code>{str(e)}</code>
+                            </details>
+                        </div>
+                        """, unsafe_allow_html=True)
+         elif submit_button and not query:
+            st.warning("Por favor, digite sua pergunta antes de clicar em Analisar Dados")
 
 
     
