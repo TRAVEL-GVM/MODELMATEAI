@@ -141,7 +141,7 @@ elif indicator == "ModelMate GPT":
     st.title("ModelMate GPT")
 
     if "generated_code" not in st.session_state:
-    st.session_state.generated_code = None  # Inicializa
+        st.session_state.generated_code = None  # Inicializa
 
     with st.expander("🔎 Data Preview"):
         df = pd.read_csv("seu_arquivo.csv")  # Substitua pelo seu DataFrame
