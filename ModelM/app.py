@@ -167,7 +167,7 @@ elif indicator == "ModelMate GPT":
                     config={
                         "llm": llm,
                         "response_parser": StreamlitResponse,
-                        "callback": StreamlitCallback(container, show_code=False)
+                        "callback": StreamlitCallback_v2(container, show_code=False)
                     },
                 )
                 
