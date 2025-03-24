@@ -149,8 +149,6 @@ elif indicator == "ModelMate GPT":
     query = st.text_area("🗣️ Chat with Dataframe")
     container = st.container()
     
-    show_code = st.checkbox("Show Python code generated in the backend.", value=False)
-    
     if st.button("Send"):
         if query:
             try:
@@ -161,7 +159,7 @@ elif indicator == "ModelMate GPT":
                         "llm": llm,
                         "response_parser": StreamlitResponse,
                         "callback": StreamlitCallback(container),
-                        "verbose": show_code,  # Esta linha desativa a exibição do código
+                        "verbose": False,  # Esta linha desativa a exibição do código
                     },
                 )
                 
