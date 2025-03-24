@@ -64,9 +64,9 @@ st.sidebar.markdown(f'<a><img src="{travel_logo_url}" alt="Logo" style="width: 1
  
 st.markdown(mmd_str, unsafe_allow_html=True)
  
-st.sidebar.header("Select index:")
+st.sidebar.header("STARTING MENU:")
 indicator = st.sidebar.selectbox(
-    "Choose an indicator to analyse:", ("Analyse data", "ModelMate GPT")
+    "CHOOSE A SECTION:", ("Analyse data", "ModelMate GPT")
 )
  
 if indicator == "Analyse data":
