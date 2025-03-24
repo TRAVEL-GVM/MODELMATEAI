@@ -155,6 +155,8 @@ elif indicator == "ModelMate GPT":
     with st.expander("🔎 Dataframe Preview"):
         st.dataframe(df.tail(5), hide_index=True)
 
+    show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
+
     query = st.text_area("🗣️ Chat with Dataframe")
     container = st.container()
     
@@ -167,7 +169,7 @@ elif indicator == "ModelMate GPT":
                     config={
                         "llm": llm,
                         "response_parser": StreamlitResponse,
-                        "callback": StreamlitCallback_v2(container, show_code=False)
+                        "callback": StreamlitCallback_v2(container, show_code=show_code)
                     },
                 )
                 
