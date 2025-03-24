@@ -143,8 +143,7 @@ if indicator == "Analyse data":
     numeric_columns = filtered_df.drop(columns=['ID']).select_dtypes(include=['float64', 'int']).columns
     column = st.selectbox('Choose the variable to plot the distribution:', numeric_columns)
 
-    with st.container():
-      #st.pyplot(fig, clear_figure=True)
+    with st.container(height=300):
       plot_distribution_v2(df, column)
  
 elif indicator == "ModelMate GPT":
