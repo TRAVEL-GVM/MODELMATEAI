@@ -231,49 +231,24 @@ elif indicator == "ModelMate GPT":
             key="show_code_toggle"
         )
 
-if submit_button:
-    if query:
-        container = st.container()
-        try:
-            with st.spinner("Processando sua pergunta..."):
-                llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                query_engine = SmartDataframe(
-                    df,
-                    config={
-                        "llm": llm,
-                        "response_parser": StreamlitResponse(container),
-                        "callback": StreamlitCallback_v2(container, show_code=show_code),
-                        "save_charts": True,
-                        "save_charts_path": "temp_charts"
-                    },
-                )
-                
-                # Limpa gráficos anteriores
-                os.makedirs("temp_charts", exist_ok=True)
-                for file in glob.glob("temp_charts/*.png"):
-                    os.remove(file)
-                
-                # Executa a consulta
-                result = query_engine.chat(query)
-                
-                # Exibe gráfico se foi gerado
-                if os.path.exists("temp_charts/temp_chart.png"):
-                    st.image("temp_charts/temp_chart.png", use_container_width=True)
-                
-                st.success("Análise concluída com sucesso!")
-        except Exception as e:
-            st.error(f"Erro: {e}")
-            st.markdown(f"""
-            <div style="background-color: #f8f9fa; 
-                        padding: 15px; 
-                        border-radius: 5px; 
-                        margin-top: 15px;
-                        border-left: 4px solid #ff4b4b;">
-                <details>
-                    <summary><strong>Detalhes do erro</strong></summary>
-                    <pre>{str(e)}</pre>
-                </details>
-            </div>
-            """, unsafe_allow_html=True)
-    else:
-        st.warning("Por favor, digite sua pergunta antes de enviar")
+    #show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
+ 
+    if if submit_button and query:
+        with st.spinner("Processando sua pergunta... ⏳"):
+             try:
+                 llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                 result_container = st.container()
+
+                 query_engine = SmartDataframe(
+                     df,
+                     config={
+                         "llm": llm,
+                         "response_parser": StreamlitResponse,
+                         "callback": StreamlitCallback_v2(result_container, show_code=show_code)
+                     },
+                 )
+                 answer = query_engine.chat(query)
+                 st.toast("✅ Análise concluída com sucesso!", icon="✅")
+             except Exception as e:
+                 st.error(f"Error: {e}")
+                 st.write(f"Traceback: {str(e)}")
