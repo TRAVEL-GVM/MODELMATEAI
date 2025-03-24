@@ -143,8 +143,10 @@ if indicator == "Analyse data":
     numeric_columns = filtered_df.drop(columns=['ID']).select_dtypes(include=['float64', 'int']).columns
     column = st.selectbox('Choose the variable to plot the distribution:', numeric_columns)
 
-    with st.container(height=600):
-      plot_distribution_v2(df, column)
+    # Adaptar ao tamanho da tela
+    window_width = st.session_state.get('window_width', 800)  # Obter via JS ou estimar
+    fig_width = min(8, window_width / 100)  # Não ultrapassar 8 polegadas
+    plot_distribution_v2(df, column, width=fig_width)
  
 elif indicator == "ModelMate GPT":
     # Configuração de estilo específica para o GPT
