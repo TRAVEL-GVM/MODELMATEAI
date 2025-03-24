@@ -146,13 +146,11 @@ elif indicator == "ModelMate GPT":
     with st.expander("🔎 Dataframe Preview"):
         st.dataframe(df.tail(5), hide_index=True)
 
-    #st.write(st.secrets["openai"]["api_key"])
-
     query = st.text_area("🗣️ Chat with Dataframe")
-
-    show_code = st.checkbox("Mostrar código Python gerado")  # Checkbox para mostrar o código
     container = st.container()
-
+    
+    show_code = st.checkbox("Show Python code generated in the backend.", value=False)
+    
     if st.button("Send"):
         if query:
             try:
@@ -163,17 +161,13 @@ elif indicator == "ModelMate GPT":
                         "llm": llm,
                         "response_parser": StreamlitResponse,
                         "callback": StreamlitCallback(container),
+                        "verbose": show_code,  # Esta linha desativa a exibição do código
                     },
                 )
                 
                 answer = query_engine.chat(query)
-                
-                if show_code:
-                    st.code(query_engine.last_generated_code)  # Exibe o código se a checkbox estiver marcada
-                
-                st.write("Resposta processada.")
+                st.write("Query processed.")
             except Exception as e:
                 st.error(f"Error: {e}")
                 st.write(f"Traceback: {str(e)}")
-
     
