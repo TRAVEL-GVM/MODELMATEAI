@@ -218,7 +218,7 @@ elif indicator == "ModelMate GPT":
                 key="gpt_textarea"
             )
             
-            col1, col2, col3 = st.columns([2, 1, 1])
+            col1, col2 = st.columns([3, 1])
             with col1:
                 submit_button = st.form_submit_button(
                     "🚀 Analisar Dados",
@@ -228,16 +228,8 @@ elif indicator == "ModelMate GPT":
             with col2:
                 show_code = st.toggle(
                     "👨💻 Mostrar código",
-                    help="Exibir o código Python gerado"
-                )
-            with col3:
-                st.markdown("<div style='height: 28px'></div>", unsafe_allow_html=True)
-                st.download_button(
-                    "📥 Exportar Resultados",
-                    data="",
-                    use_container_width=True,
-                    disabled=True,
-                    help="Exportar os resultados da análise"
+                    help="Exibir o código Python gerado",
+                    key="show_code_toggle"
                 )
 
         # Processamento e resultados
