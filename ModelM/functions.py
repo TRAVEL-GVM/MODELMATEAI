@@ -309,7 +309,7 @@ def plot_distribution_v2(df, column_name):
         sns.set_style("whitegrid")
         
         # Cria figura com tamanho controlado
-        fig, ax = plt.subplots(figsize=(2, 2))
+        fig, ax = plt.subplots(figsize=(12, 8))
         
         # Plotagem do histograma
         sns.histplot(
