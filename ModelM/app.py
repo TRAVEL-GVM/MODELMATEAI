@@ -16,39 +16,27 @@ from pandasai.llm import OpenAI
 from pandasai.responses.response_parser import ResponseParser
 
 
+# 1️⃣ Classe Callback (armazena código na session_state)
 class StreamlitCallback(BaseCallback):
     def __init__(self, container) -> None:
-        """Initialize callback handler."""
         self.container = container
 
     def on_code(self, response: str):
-        self.container.code(response)
+        st.session_state.generated_code = response  # Guarda o código
 
-class StreamlitCallback_v2(BaseCallback):
-    def __init__(self, container, show_code=False) -> None:  # Novo parâmetro
-        self.container = container
-        self.show_code = show_code  # Controla se o código é exibido
-
-    def on_code(self, response: str):
-        if self.show_code:  # Só mostra o código se show_code=True
-            self.container.code(response)
-
-
+# 2️⃣ Classe Response (exibe resposta normal)
 class StreamlitResponse(ResponseParser):
     def __init__(self, context) -> None:
         super().__init__(context)
 
     def format_dataframe(self, result):
         st.dataframe(result["value"])
-        return
 
     def format_plot(self, result):
         st.image(result["value"])
-        return
 
     def format_other(self, result):
         st.write(result["value"])
-        return
 
 
 df = get_mm_data()
@@ -152,30 +140,30 @@ if indicator == "Analyse data":
 elif indicator == "ModelMate GPT":
     st.title("ModelMate GPT")
 
-    with st.expander("🔎 Dataframe Preview"):
-        st.dataframe(df.tail(5), hide_index=True)
+    if "generated_code" not in st.session_state:
+    st.session_state.generated_code = None  # Inicializa
 
-    show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
-
-    query = st.text_area("🗣️ Chat with Dataframe")
-    container = st.container()
+    with st.expander("🔎 Data Preview"):
+        df = pd.read_csv("seu_arquivo.csv")  # Substitua pelo seu DataFrame
+        st.dataframe(df.tail(5))
     
-    if st.button("Send"):
+    query = st.text_area("🗣️ Chat with Data")
+    if st.button("Send Query"):
         if query:
-            try:
-                llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                query_engine = SmartDataframe(
-                    df,
-                    config={
-                        "llm": llm,
-                        "response_parser": StreamlitResponse,
-                        "callback": StreamlitCallback_v2(container, show_code=show_code)
-                    },
-                )
-                
-                answer = query_engine.chat(query)
-                st.write("Query processed.")
-            except Exception as e:
-                st.error(f"Error: {e}")
-                st.write(f"Traceback: {str(e)}")
+            llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+            query_engine = SmartDataframe(
+                df,
+                config={
+                    "llm": llm,
+                    "response_parser": StreamlitResponse(st.container()),
+                    "callback": StreamlitCallback(st.container()),  # Só armazena, não exibe
+                    "verbose": False,
+                },
+            )
+            answer = query_engine.chat(query)
+            st.success("✅ Done!")
     
+    # 4️⃣ Botão para mostrar código (se existir)
+    if st.session_state.generated_code:
+        if st.button("👨💻 Show Generated Code"):
+            st.code(st.session_state.generated_code)
