@@ -2,6 +2,14 @@ import os
 import pandas as pd
 import numpy as np
 import streamlit as st
+# import openai
+ 
+from prompts import *
+from config import *
+from get_data import *
+import openpyxl
+from functions import *
+ 
 from pandasai import SmartDataframe
 from pandasai.callbacks import BaseCallback
 from pandasai.llm import OpenAI
