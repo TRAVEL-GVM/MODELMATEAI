@@ -149,6 +149,8 @@ elif indicator == "ModelMate GPT":
     #st.write(st.secrets["openai"]["api_key"])
 
     query = st.text_area("🗣️ Chat with Dataframe")
+
+    show_code = st.checkbox("Mostrar código Python gerado")  # Checkbox para mostrar o código
     container = st.container()
 
     if st.button("Send"):
@@ -164,13 +166,12 @@ elif indicator == "ModelMate GPT":
                     },
                 )
                 
-                #st.write("Sending query to OpenAI API...")
                 answer = query_engine.chat(query)
                 
-                # Verificar a resposta
-                #st.write("Resposta do chat:", answer)
-    
-                st.write("Query processed.")
+                if show_code:
+                    st.code(query_engine.last_generated_code)  # Exibe o código se a checkbox estiver marcada
+                
+                st.write("Resposta processada.")
             except Exception as e:
                 st.error(f"Error: {e}")
                 st.write(f"Traceback: {str(e)}")
