@@ -195,60 +195,60 @@ elif indicator == "ModelMate GPT":
     </style>
     """, unsafe_allow_html=True)
 
-    # Container principal
     with st.container():
-        st.markdown(f"""
-        <div style='text-align: center; margin-bottom: 30px;'>
-            <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
-            <p style='color: #666; font-size: 16px;'>Your AI assistant for Model Mate insights</p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style='text-align: center; margin-bottom: 30px;'>
+        <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
+        <p style='color: #666; font-size: 16px;'>Your AI assistant for Model Mate insights</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-        # Seção de visualização de dados
-        with st.expander("🔍 Data preview (Random sample)", expanded=False):
-            st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
+    # Seção de visualização de dados
+    with st.expander("🔍 Data preview (Random sample)", expanded=False):
+        st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
 
-        show_code = st.toggle(
-                    "👨💻 Show code",
-                    help="🔧 Show Python code generated in the backend.",
-                    key="show_code_toggle", value=False)
- 
-        query = st.text_area(
+    show_code = st.toggle(
+        "👨💻 Show code",
+        help="🔧 Show Python code generated in the backend.",
+        key="show_code_toggle", 
+        value=False
+    )
+
+    query = st.text_area(
         "💡 Make your question about the data:",
         height=150,
         placeholder="Example: Make a bar plot of the frequency of each detector. The bars must be green.",
         help="Write your question in natural language for data analysis/querying outputs",
         key="gpt_textarea"
-        )
-        container = st.container()
-        if st.button("Send"):
-            if query:
-                with st.spinner("Processing your prompt... ⏳"):
-                    try:
-                       llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                       query_engine = SmartDataframe(
-                           df,
-                           config={
-                               "llm": llm,
-                               "response_parser": StreamlitResponse,
-                               "callback": StreamlitCallback_v2(container, show_code=show_code)
-                           },
-                       )
-                       answer = query_engine.chat(query)
-                       st.toast("✅ Análise concluída com sucesso!", icon="✅")
-                    except Exception as e:
-                       st.error(f"Erro ao processar sua solicitação: {str(e)}")
-                       st.markdown(f"""
-                        <div class='gpt-response'>
-                            <p style='color: #d32f2f;'>Ocorreu um erro ao processar sua pergunta.</p>
-                            <details>
-                                <summary>Detalhes técnicos</summary>
-                                <code>{str(e)}</code>
-                            </details>
-                        </div>
-                        """, unsafe_allow_html=True)
-           elif submit_button and not query:
-            st.warning("Por favor, digite sua pergunta antes de clicar em Analisar Dados")
-
-
+    )
     
+    container = st.container()
+    
+    if st.button("Send"):
+        if query:
+            with st.spinner("Processing your prompt... ⏳"):
+                try:
+                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                    query_engine = SmartDataframe(
+                        df,
+                        config={
+                            "llm": llm,
+                            "response_parser": StreamlitResponse,
+                            "callback": StreamlitCallback_v2(container, show_code=show_code)
+                        },
+                    )
+                    answer = query_engine.chat(query)
+                    st.toast("✅ Analysis completed successfully!", icon="✅")
+                except Exception as e:
+                    st.error(f"Error processing your request: {str(e)}")
+                    st.markdown(f"""
+                    <div class='gpt-response'>
+                        <p style='color: #d32f2f;'>An error occurred while processing your question.</p>
+                        <details>
+                            <summary>Technical details</summary>
+                            <code>{str(e)}</code>
+                        </details>
+                    </div>
+                    """, unsafe_allow_html=True)
+        else:
+            st.warning("Please enter your question before submitting")
