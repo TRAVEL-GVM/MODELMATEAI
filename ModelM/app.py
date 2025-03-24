@@ -80,8 +80,8 @@ if indicator == "Analyse data":
 
     st.markdown("#### Unique values and % of categorical columns:")
 
-    # tive que remover 'Parâmetro', 'Sponsor - Dependentes'
-    columns_to_display = ['Detetor', 'Sponsor - Área Funcional', 
+    # tive que remover 'Parâmetro', 'Sponsor - Dependentes', 'Sponsor - Área Funcional'
+    columns_to_display = ['Detetor', 
                           'Âmbito do Modelo', 'Natureza da Medida', 'Status de Modelo',
                           'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
 
