@@ -231,7 +231,7 @@ elif indicator == "ModelMate GPT":
                     key="show_code_toggle"
                 )
 
-                    if submit_button and query:
+        if submit_button and query:
                 with st.spinner("Processando sua pergunta... ⏳"):
                     try:
                         # Configuração do PandasAI
