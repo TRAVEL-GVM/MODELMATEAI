@@ -204,27 +204,27 @@ elif indicator == "ModelMate GPT":
            </div>
         """, unsafe_allow_html=True)
  
-    with st.expander("🔎 Dataframe Preview"):
-        st.dataframe(df.tail(5), hide_index=True)
- 
-    show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
- 
-    query = st.text_area("🗣️ Chat with Dataframe")
-    container = st.container()
-    if st.button("Send"):
-        if query:
-            try:
-                llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
-                query_engine = SmartDataframe(
-                    df,
-                    config={
-                        "llm": llm,
-                        "response_parser": StreamlitResponse,
-                        "callback": StreamlitCallback_v2(container, show_code=show_code)
-                    },
-                )
-                answer = query_engine.chat(query)
-                st.write("Query processed.")
-            except Exception as e:
-                st.error(f"Error: {e}")
-                st.write(f"Traceback: {str(e)}")
+     with st.expander("🔎 Dataframe Preview"):
+         st.dataframe(df.tail(5), hide_index=True)
+  
+     show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
+  
+     query = st.text_area("🗣️ Chat with Dataframe")
+     container = st.container()
+     if st.button("Send"):
+         if query:
+             try:
+                 llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                 query_engine = SmartDataframe(
+                     df,
+                     config={
+                         "llm": llm,
+                         "response_parser": StreamlitResponse,
+                         "callback": StreamlitCallback_v2(container, show_code=show_code)
+                     },
+                 )
+                 answer = query_engine.chat(query)
+                 st.write("Query processed.")
+             except Exception as e:
+                 st.error(f"Error: {e}")
+                 st.write(f"Traceback: {str(e)}")
