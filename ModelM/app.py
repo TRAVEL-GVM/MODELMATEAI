@@ -208,47 +208,72 @@ elif indicator == "ModelMate GPT":
         with st.expander("🔍 Pré-visualização dos Dados (Amostra aleatória)", expanded=False):
             st.dataframe(df.sample(5), use_container_width=True, hide_index=True)
 
-        with st.form("gpt_query_form"):
-            query = st.text_area(
-                "💡 Faça sua pergunta sobre os dados:",
-                height=150,
-                placeholder="Exemplo: Mostre a distribuição de frequência por detector",
-                help="Digite sua pergunta em linguagem natural para analisar os dados",
-                key="gpt_textarea"
-            )
-            
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                submit_button = st.form_submit_button(
-                    "🚀 Analisar Dados",
-                    use_container_width=True,
-                    help="Clique para processar sua pergunta"
-                )
-            with col2:
-                show_code = st.toggle(
-                    "💻🔧Show Python code generated in the backend.",
-                    help="🔧 Show Python code generated in the backend.",
-                    key="show_code_toggle"
-                )
+    with st.form("gpt_query_form"):
+        query = st.text_area(
+        "💡 Faça sua pergunta sobre os dados:",
+        height=150,
+        placeholder="Exemplo: Mostre a distribuição de frequência por detector",
+        help="Digite sua pergunta em linguagem natural para analisar os dados",
+        key="gpt_textarea"
+    )
+    
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        submit_button = st.form_submit_button(
+            "🚀 Analisar Dados",
+            use_container_width=True,
+            help="Clique para processar sua pergunta"
+        )
+    with col2:
+        show_code = st.toggle(
+            "💻 Mostrar código Python",
+            help="Exibir o código gerado pelo sistema",
+            key="show_code_toggle"
+        )
 
-    show_code = st.toggle("🔧 Show Python code generated in the backend.", value=False)
- 
-    query = st.text_area("🗣️ Chat with Dataframe")
-    container = st.container()
-    if st.button("Send"):
-        if query:
-            try:
+if submit_button:
+    if query:
+        container = st.container()
+        try:
+            with st.spinner("Processando sua pergunta..."):
                 llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
                 query_engine = SmartDataframe(
                     df,
                     config={
                         "llm": llm,
-                        "response_parser": StreamlitResponse,
-                        "callback": StreamlitCallback_v2(container, show_code=show_code)
+                        "response_parser": StreamlitResponse(container),
+                        "callback": StreamlitCallback_v2(container, show_code=show_code),
+                        "save_charts": True,
+                        "save_charts_path": "temp_charts"
                     },
                 )
-                answer = query_engine.chat(query)
-                st.write("Query processed.")
-            except Exception as e:
-                st.error(f"Error: {e}")
-                st.write(f"Traceback: {str(e)}")
+                
+                # Limpa gráficos anteriores
+                os.makedirs("temp_charts", exist_ok=True)
+                for file in glob.glob("temp_charts/*.png"):
+                    os.remove(file)
+                
+                # Executa a consulta
+                result = query_engine.chat(query)
+                
+                # Exibe gráfico se foi gerado
+                if os.path.exists("temp_charts/temp_chart.png"):
+                    st.image("temp_charts/temp_chart.png", use_container_width=True)
+                
+                st.success("Análise concluída com sucesso!")
+        except Exception as e:
+            st.error(f"Erro: {e}")
+            st.markdown(f"""
+            <div style="background-color: #f8f9fa; 
+                        padding: 15px; 
+                        border-radius: 5px; 
+                        margin-top: 15px;
+                        border-left: 4px solid #ff4b4b;">
+                <details>
+                    <summary><strong>Detalhes do erro</strong></summary>
+                    <pre>{str(e)}</pre>
+                </details>
+            </div>
+            """, unsafe_allow_html=True)
+    else:
+        st.warning("Por favor, digite sua pergunta antes de enviar")
