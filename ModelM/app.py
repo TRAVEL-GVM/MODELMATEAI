@@ -196,12 +196,12 @@ elif indicator == "ModelMate GPT":
     """, unsafe_allow_html=True)
 
     with st.container():
-    st.markdown(f"""
-    <div style='text-align: center; margin-bottom: 30px;'>
-        <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
-        <p style='color: #666; font-size: 16px;'>Your AI assistant for Model Mate insights</p>
-    </div>
-    """, unsafe_allow_html=True)
+       st.markdown(f"""
+       <div style='text-align: center; margin-bottom: 30px;'>
+           <h1 style='color: {default_color1};'>🤖 ModelMate GPT</h1>
+           <p style='color: #666; font-size: 16px;'>Your AI assistant for Model Mate insights</p>
+       </div>
+       """, unsafe_allow_html=True)
 
     # Seção de visualização de dados
     with st.expander("🔍 Data preview (Random sample)", expanded=False):
