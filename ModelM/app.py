@@ -14,7 +14,7 @@ from pandasai import SmartDataframe
 from pandasai.callbacks import BaseCallback
 from pandasai.llm import OpenAI
 from pandasai.responses.response_parser import ResponseParser
-from io import BytesIO
+import io
  
  
 class StreamlitCallback(BaseCallback):
