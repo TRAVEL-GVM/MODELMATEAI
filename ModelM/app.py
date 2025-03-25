@@ -244,6 +244,8 @@ elif indicator == "ModelMate GPT":
                     answer = query_engine.chat(query)
                     st.toast("✅ Analysis completed successfully!", icon="✅")
 
+                    st.write(answer)
+
                     if isinstance(answer, pd.DataFrame):  # Certifique-se que é um DataFrame
                         output = BytesIO()
                         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
