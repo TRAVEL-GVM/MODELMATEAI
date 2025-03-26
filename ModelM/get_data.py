@@ -4,6 +4,7 @@ from config import nmd_data_path
 
 
 def get_mm_data():
-    df = pd.read_excel(nmd_data_path)
+    #df = pd.read_excel(nmd_data_path)
+    df = pd.read_csv(nmd_data_path)
 
     return df
