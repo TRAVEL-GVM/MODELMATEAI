@@ -93,7 +93,7 @@ if indicator == "Analyse data":
     # tive que remover 'Parâmetro', 'Sponsor - Dependentes', 'Sponsor - Área Funcional'
     columns_to_display = ['Detetor', 
                           'Âmbito do Modelo', 'Natureza da Medida', 'Status de Modelo',
-                          'Severidade', 'Tipo de Deadline', 'Status', 'Item Type', 'Path']
+                          'Severidade', 'Tipo de Deadline', 'Status']
  
     #st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
     display_dataframe_as_html_table(show_all_categorical_summary(filtered_df)[columns_to_display],  min_column_widths={
