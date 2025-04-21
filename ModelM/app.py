@@ -2,30 +2,19 @@ import os
 import pandas as pd
 import numpy as np
 import streamlit as st
-# import openai
- 
 from prompts import *
 from config import *
 from get_data import *
 import openpyxl
 from functions import *
- 
 from pandasai import SmartDataframe
 from pandasai.callbacks import BaseCallback
 from pandasai.llm import OpenAI
 from pandasai.responses.response_parser import ResponseParser
 import io
- 
+from datetime import datetime, timedelta
  
 class StreamlitCallback(BaseCallback):
-    def __init__(self, container) -> None:
-        """Initialize callback handler."""
-        self.container = container
- 
-    def on_code(self, response: str):
-        self.container.code(response)
- 
-class StreamlitCallback_v2(BaseCallback):
     def __init__(self, container, show_code=False) -> None:  # Novo parâmetro
         self.container = container
         self.show_code = show_code  # Controla se o código é exibido
@@ -53,103 +42,98 @@ class StreamlitResponse(ResponseParser):
  
  
 df = get_mm_data()
+df['Deadline Implementação'] = pd.to_datetime(df['Deadline Implementação'], errors='coerce')
+df['Data Referência Documental'] = pd.to_datetime(df['Data Referência Documental'], errors='coerce')
  
 #################################################### BUILD DASHBOARD ############################################
  
 st.set_page_config(page_title=dashboard_main_title, layout="wide")
 set_vertical_scrollbar_style()
 set_horizontal_scrollbar_style()
+
+st.markdown(f'<a><img src="{travel_logo_url}" alt="Logo" style="width: 25%;"></a>', unsafe_allow_html=True)
+
 st.markdown(f"<h1 style='color:{default_color1};'>{dashboard_main_title}</h1>", unsafe_allow_html=True)
  
-st.sidebar.markdown(f'<a><img src="{travel_logo_url}" alt="Logo" style="width: 100%;"></a>', unsafe_allow_html=True)
- 
-st.markdown(mmd_str, unsafe_allow_html=True)
- 
-st.sidebar.header("STARTING MENU:")
-indicator = st.sidebar.selectbox(
-    "CHOOSE A SECTION:", ("Analyse data", "ModelMate GPT")
-)
- 
-if indicator == "Analyse data":
-    #st.markdown(f"<h6 style='color:#4CAF50;'>Raw data</h6>", unsafe_allow_html=True)
+# Create tabs
+tab0, tab1, tab2, tab3, tab4 = st.tabs([
+    "Analyse data", 
+    "Model Mate GPT", 
+    "Overdue and without deadline findings",
+    "Upcoming findings",
+    "Status monitoring"
+])
+
+with tab0:
+
+    st.markdown(mmd_str, unsafe_allow_html=True)
  
     if st.checkbox("Show the raw ModelMate data"):
         st.dataframe(df, hide_index=True)
+    
+    with st.expander("Filter data 🔍", expanded=False):
+        st.write("To select all IDs select 0 in ID filter.")
+        filtered_df = apply_filters_v2(df)
+        st.dataframe(filtered_df, hide_index=True)
  
-    st.header("Filtered Data")
-    st.sidebar.header("Filter Data")
-    st.sidebar.write("To select all IDs select 0 in ID filter.")
-    filtered_df = apply_filters(df)
- 
-    st.dataframe(filtered_df, hide_index=True)
- 
-    st.header("Filtered data overview")
- 
-    st.write(f" ")
-    st.write(f"Shape of the DataFrame: {filtered_df.shape[0]} rows, {filtered_df.shape[1]} columns")
- 
-    st.markdown("#### Unique values and % of categorical columns:")
- 
-    # tive que remover 'Parâmetro', 'Sponsor - Dependentes', 'Sponsor - Área Funcional'
-    columns_to_display = ['Detetor',  
-                          'Âmbito do Modelo', 'Natureza da Medida', 'Status de Modelo',
-                          'Severidade', 'Tipo de Deadline', 'Status']
- 
-    #st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
-    display_dataframe_as_html_table(show_all_categorical_summary(filtered_df)[columns_to_display],  min_column_widths={
-        'Detetor': 140,
-         #'Sponsor - Área Funcional': 300,
-        'Âmbito do Modelo': 130,
-         #'Parâmetro': 100,
-         # 'Sponsor - Dependentes': 150, # não reconhece como categoricas não sei porquê
-        'Natureza da Medida': 220,
-        'Status de Modelo': 250,
-        'Severidade': 170,
-        'Tipo de Deadline': 170,
-        'Status': 170
-        })
-    st.write('')
-    st.markdown("#### Summary statistics about numeric columns:")
- 
-    desc_df = filtered_df.describe()
-    sum_row = filtered_df.sum(numeric_only=True).rename('sum')
-    desc_with_sum = desc_df.append(sum_row)
-    num_statistics_df = (desc_with_sum
-                .reset_index(names='')
-                .drop(columns=['ID'], errors='ignore')  
-                .replace({np.nan: ''})
-                   .applymap(format_number))
- 
-    display_dataframe_as_html_table(num_statistics_df, min_column_widths={
-        'Nº de Extensions': 100,
-        'Nº de Action Items': 100,
-        'Tipo Action Item - Data Quality': 120,
-        'Tipo Action Item - Processos/RWA': 130,
-        'Tipo Action Item - Metodologia/Documentação': 130
-        })
+    with st.expander("Filtered data overview 🔍", expanded=True):
 
- 
-    st.header("Missing values")
-    display_dataframe_as_html_table(null_percentage_table(filtered_df),
-                                   min_column_widths={'Action Plan': 100,
-                                                      'Limitation/Correcção': 100,
-                                                      'Recommendations/Recomendações': 100,
-                                                      'Sponsor - Área Funcional': 100
-                                                     }
-                                       )
-    #st.write(null_percentage_table(filtered_df))
- 
-    st.title('Variables distribution')
- 
-    numeric_columns = filtered_df.drop(columns=['ID']).select_dtypes(include=['float64', 'int']).columns
-    column = st.selectbox('Choose the variable to plot the distribution:', numeric_columns)
+        st.write(f"Shape of the DataFrame: {filtered_df.shape[0]} rows, {filtered_df.shape[1]} columns")
+    
+        st.markdown("#### Unique values and % of categorical columns:")
+    
+        # tive que remover 'Parâmetro', 'Sponsor - Dependentes', 'Sponsor - Área Funcional'
+        columns_to_display = ['Detetor',  'Status',
+                            'Âmbito do Modelo', 'Natureza da Medida', 'Status de Modelo',
+                            'Severidade', 'Tipo de Deadline']
+    
+        #st.dataframe(show_all_categorical_summary(filtered_df)[columns_to_display])  
+        display_dataframe_as_html_table(show_all_categorical_summary(filtered_df)[columns_to_display],  min_column_widths={
+            'Detetor': 140,
+            #'Sponsor - Área Funcional': 300,
+            'Âmbito do Modelo': 130,
+            #'Parâmetro': 100,
+            # 'Sponsor - Dependentes': 150, # não reconhece como categoricas não sei porquê
+            'Natureza da Medida': 220,
+            'Status de Modelo': 250,
+            'Severidade': 170,
+            'Tipo de Deadline': 170,
+            'Status': 170
+            })
+        st.write('')
+        st.markdown("#### Summary statistics about numeric columns:")
+    
+        desc_df = filtered_df.describe()
+        sum_row = filtered_df.sum(numeric_only=True).rename('sum')
+        desc_with_sum = desc_df.append(sum_row)
+        num_statistics_df = (desc_with_sum
+                    .reset_index(names='')
+                    .drop(columns=['ID'], errors='ignore')  
+                    .replace({np.nan: ''})
+                    .applymap(format_number))
+    
+        display_dataframe_as_html_table(num_statistics_df, min_column_widths={
+            'Nº de Extensions': 100,
+            'Nº de Action Items': 100,
+            'Tipo Action Item - Data Quality': 120,
+            'Tipo Action Item - Processos/RWA': 130,
+            'Tipo Action Item - Metodologia/Documentação': 130
+            })
 
-    # Adaptar ao tamanho da tela
-    window_width = st.session_state.get('window_width', 800)  # Obter via JS ou estimar
-    fig_width = min(8, window_width / 100)  # Não ultrapassar 8 polegadas
-    plot_distribution_v2(df, column, width=fig_width)
- 
-elif indicator == "ModelMate GPT":
+    
+        st.header("Missing values")
+        display_dataframe_as_html_table(null_percentage_table(filtered_df),
+                                    min_column_widths={'Action Plan': 100,
+                                                        'Limitation/Correcção': 100,
+                                                        'Recommendations/Recomendações': 100,
+                                                        'Sponsor - Área Funcional': 100
+                                                        }
+                                        )
+        #st.write(null_percentage_table(filtered_df))
+
+with tab1:
+    st.markdown(mmd_str, unsafe_allow_html=True)
+
     # Configuração de estilo específica para o GPT
     st.markdown("""
     <style>
@@ -232,13 +216,13 @@ elif indicator == "ModelMate GPT":
         if query:
             with st.spinner("Processing your prompt... ⏳"):
                 try:
-                    llm = OpenAI(api_token=st.secrets["openai"]["api_key"])
+                    llm = OpenAI(api_token=api_key)
                     query_engine = SmartDataframe(
                         df,
                         config={
                             "llm": llm,
                             "response_parser": StreamlitResponse,
-                            "callback": StreamlitCallback_v2(container, show_code=show_code)
+                            "callback": StreamlitCallback(container, show_code=show_code)
                         },
                     )
                     answer = query_engine.chat(query)
@@ -257,3 +241,80 @@ elif indicator == "ModelMate GPT":
                     """, unsafe_allow_html=True)
         else:
             st.warning("Please enter your question before submitting")
+
+with tab2:
+    st.markdown(mmd_str, unsafe_allow_html=True)
+
+    hoje = datetime.now().date() 
+    limit_sixty = hoje + timedelta(days=60)
+
+    df_filtrado_open = df[(df['Deadline Implementação'].isna()) & (df['Status'].isin(['Em Curso',
+                                                                                    'Reaberto']))]
+
+    with st.expander("🔍 Findings without deadline", expanded=False):
+        st.write(" Nr of findings without deadline: ", df_filtrado_open.shape[0])
+        st.dataframe(df_filtrado_open, hide_index=True)
+
+    with st.expander("🔍 Findings overdue as of today", expanded=False):
+
+        df_overdue = df[(df['Deadline Implementação'] <= str(hoje)) 
+                                      & (df['Status'].isin(['Em Curso', 'Reaberto']))]
+        
+        st.write(" Nr of findings without deadline: ", df_overdue.shape[0])
+        if df_overdue.empty:
+            st.write("No overdue findings without deadline.")
+        else:
+            st.dataframe(df_overdue, hide_index=True)
+
+    with st.expander("🔍 Findings in overdue up to 3 months", expanded=False):
+        
+        df_overdue_3m = df[(df['Deadline Implementação'] >= str(hoje - timedelta(days=90)))
+                            & (df['Deadline Implementação'] <= str(hoje))
+                            & (df['Status'].isin(['Em Curso', 'Reaberto']))]
+        
+        st.write(" Nr of findings without deadline: ", df_overdue_3m.shape[0])
+        if df_overdue_3m.empty:
+            st.write("No overdue findings without deadline.")
+        else:
+            st.dataframe(df_overdue_3m, hide_index=True)
+
+    with st.expander("🔍 Findings in overdue up to 6 months", expanded=False):
+        df_overdue_36m = df[(df['Deadline Implementação'] >= str(hoje - timedelta(days=180))) & 
+                            (df['Deadline Implementação'] < str(hoje - timedelta(days=90)))
+                            & (df['Status'].isin(['Em Curso', 'Reaberto']))]
+        
+        st.write(" Nr of findings without deadline: ", df_overdue_36m.shape[0])
+        if df_overdue_36m.empty:
+            st.write("No overdue findings without deadline.")
+        else:
+            st.dataframe(df_overdue_36m, hide_index=True)
+    
+    with st.expander("🔍 Findings in overdue for more than 6 months", expanded=False):
+        st.write(str(hoje - timedelta(days=180)))
+        df_overdue_6m = df[(df['Deadline Implementação'] < str(hoje - timedelta(days=180)))
+                            & (df['Status'].isin(['Em Curso', 'Reaberto']))]
+        
+        st.write(" Nr of findings without deadline: ", df_overdue_6m.shape[0])
+        if df_overdue_6m.empty:
+            st.write("No overdue findings without deadline.")
+        else:
+            st.dataframe(df_overdue_6m, hide_index=True)
+
+with tab3:
+    st.header("Upcoming findings")
+
+    df_upcoming = df[  (df['Deadline Implementação'] >= str(hoje)) 
+                     & (df['Deadline Implementação'] <= str(hoje + timedelta(days=60))) 
+                     & (df['Status'].isin(['Em Curso', 'Reaberto'])) 
+                     & (df['Deadline Implementação'].notna())]
+
+    st.write(df_upcoming)
+
+    ###### FAZER EMAIL A REPORTAR UPCOMINGS ########### 
+    st.write("Nr of upcoming findings: ", df_upcoming.shape[0])
+
+with tab4:
+    st.header("...")
+
+    #dfx = pd.read_csv('/MODELMATEAI/ModelM/data/MM_old.csv')
+    #st.write(dfx)
