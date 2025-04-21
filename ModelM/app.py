@@ -316,5 +316,5 @@ with tab3:
 with tab4:
     st.header("...")
 
-    #dfx = pd.read_csv('/MODELMATEAI/ModelM/data/MM_old.csv')
-    #st.write(dfx)
+    dfx = pd.read_csv(nmd_old_path)
+    st.write(dfx)
