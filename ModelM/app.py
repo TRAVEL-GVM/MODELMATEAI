@@ -55,7 +55,29 @@ st.markdown(f'<a><img src="{travel_logo_url}" alt="Logo" style="width: 25%;"></a
 
 st.markdown(f"<h1 style='color:{default_color1};'>{dashboard_main_title}</h1>", unsafe_allow_html=True)
  
-# Create tabs
+st.markdown("""
+<style>
+
+	.stTabs [data-baseweb="tab-list"] {
+		gap: 2px;
+        font-size: 5rem;
+    }
+
+	.stTabs [data-baseweb="tab"] {
+		height: 50px;
+        width: 100%;
+        white-space: pre-wrap;
+		background-color: #F0F2F6;
+		border-radius: 4px 4px 0px 0px;
+		gap: 1px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+    }
+
+</style>""", unsafe_allow_html=True)
+
+
+# Define as abas normalmente
 tab0, tab1, tab2, tab3, tab4 = st.tabs([
     "Analyse data", 
     "Model Mate GPT", 
@@ -63,6 +85,7 @@ tab0, tab1, tab2, tab3, tab4 = st.tabs([
     "Upcoming findings",
     "Status monitoring"
 ])
+
 
 with tab0:
 
@@ -73,8 +96,8 @@ with tab0:
     
     with st.expander("Filter data 🔍", expanded=False):
         st.write("To select all IDs select 0 in ID filter.")
-        filtered_df = apply_filters_v2(df)
-        st.dataframe(filtered_df, hide_index=True)
+        filtered_df = apply_filters_v3(df)
+        #st.dataframe(filtered_df, hide_index=True)
  
     with st.expander("Filtered data overview 🔍", expanded=True):
 
@@ -243,6 +266,33 @@ with tab1:
             st.warning("Please enter your question before submitting")
 
 with tab2:
+
+    min_column_widths={
+            'Detetor': 100,
+            'Sponsor - Área Funcional': 250,
+            'Âmbito do Modelo': 130,
+            'Parâmetro': 100,
+            'Sponsor - Dependentes': 150, # não reconhece como categoricas não sei porquê
+            'Natureza da Medida': 200,
+            'Status de Modelo': 160,
+            'Severidade': 170,
+            'Tipo de Deadline': 170,
+            'Status': 170,
+            'Finding/Razão da Medida': 800,
+            'Data Referência Documental': 200,
+            'Referência Documental': 350,
+            'ID Finding/Razão da Medida Nível 1': 250,
+            'ID Obligation/Medida Nível 1': 250,
+            'Obligation/Medida': 500,
+            'Data de Implementação': 180,   
+            'Nº de Action Items': 120,
+            'Tipo Action Item - Data Quality': 140, 
+            'Tipo de Deadline': 100,
+            'Status': 100,
+            'Observações': 500,
+            'Severidade': 120,
+            'Action Plan': 250,
+             }
     st.markdown(mmd_str, unsafe_allow_html=True)
 
     hoje = datetime.now().date() 
@@ -253,7 +303,11 @@ with tab2:
 
     with st.expander("🔍 Findings without deadline", expanded=False):
         st.write(" Nr of findings without deadline: ", df_filtrado_open.shape[0])
-        st.dataframe(df_filtrado_open, hide_index=True)
+        #st.dataframe(df_filtrado_open, hide_index=True)
+
+        heightx = min(df_filtrado_open.shape[0]*130, 800)
+
+        display_dataframe_with_scroll(df_filtrado_open, min_column_widths=min_column_widths, height=heightx)
 
     with st.expander("🔍 Findings overdue as of today", expanded=False):
 
@@ -264,7 +318,10 @@ with tab2:
         if df_overdue.empty:
             st.write("No overdue findings without deadline.")
         else:
-            st.dataframe(df_overdue, hide_index=True)
+            #st.dataframe(df_overdue, hide_index=True)
+            heighty = min(df_overdue.shape[0]*130, 800)
+
+            display_dataframe_with_scroll(df_overdue, min_column_widths=min_column_widths, height=heighty)
 
     with st.expander("🔍 Findings in overdue up to 3 months", expanded=False):
         
@@ -276,7 +333,10 @@ with tab2:
         if df_overdue_3m.empty:
             st.write("No overdue findings without deadline.")
         else:
-            st.dataframe(df_overdue_3m, hide_index=True)
+            #st.dataframe(df_overdue_3m, hide_index=True)
+            heightz = min(df_overdue_3m.shape[0]*130, 800)
+
+            display_dataframe_with_scroll(df_overdue_3m, min_column_widths=min_column_widths, height=heightz)
 
     with st.expander("🔍 Findings in overdue up to 6 months", expanded=False):
         df_overdue_36m = df[(df['Deadline Implementação'] >= str(hoje - timedelta(days=180))) & 
@@ -287,7 +347,10 @@ with tab2:
         if df_overdue_36m.empty:
             st.write("No overdue findings without deadline.")
         else:
-            st.dataframe(df_overdue_36m, hide_index=True)
+            #st.dataframe(df_overdue_36m, hide_index=True)
+            heightb = min(df_overdue_36m.shape[0]*150, 1000)
+
+            display_dataframe_with_scroll(df_overdue_36m, min_column_widths=min_column_widths, height=heightb)
     
     with st.expander("🔍 Findings in overdue for more than 6 months", expanded=False):
         st.write(str(hoje - timedelta(days=180)))
@@ -298,7 +361,10 @@ with tab2:
         if df_overdue_6m.empty:
             st.write("No overdue findings without deadline.")
         else:
-            st.dataframe(df_overdue_6m, hide_index=True)
+            heighta = min(df_overdue_6m.shape[0]*150, 1000)
+
+            display_dataframe_with_scroll(df_overdue_6m, min_column_widths=min_column_widths, height=heighta)
+            #st.dataframe(df_overdue_6m, hide_index=True)
 
 with tab3:
     st.header("Upcoming findings")
@@ -308,10 +374,10 @@ with tab3:
                      & (df['Status'].isin(['Em Curso', 'Reaberto'])) 
                      & (df['Deadline Implementação'].notna())]
 
-    st.write(df_upcoming)
-
-    ###### FAZER EMAIL A REPORTAR UPCOMINGS ########### 
     st.write("Nr of upcoming findings: ", df_upcoming.shape[0])
+    #st.write(df_upcoming)
+    display_dataframe_with_scroll(df_upcoming, min_column_widths=min_column_widths, height=800)
+
 
 with tab4:
     st.header("...")

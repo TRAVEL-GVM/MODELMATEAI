@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from config import *
+from io import StringIO
 
 
 def show_all_categorical_summary(df):
@@ -49,7 +50,7 @@ def display_dataframe_as_html_table(df, min_column_widths=None):
     table { 
         border-collapse: collapse; 
         width: 100%; 
-        font-size: 11px;  /* Smaller font size */
+        font-size: 15px;  /* Smaller font size */
     }
     th {
         background-color: #179297;  /* Green background for header */
@@ -171,6 +172,76 @@ def apply_filters(df):
 
     return filtered_df1
 
+
+def apply_filters_v3(df):
+    st.header("Filters")
+
+    filtered_df1 = df.copy()  # Evita modificar o DataFrame original diretamente
+    categorical_columns = ['Status', 'Âmbito do Modelo', 'Segmento', 'Severidade', 'Detetor', 'Sponsor',
+                           'ID Finding/Razão da Medida Nível 1', 'ID Obligation/Medida Nível 1']
+
+    for col in categorical_columns:
+        if col in df.columns:
+            df[col] = df[col].astype(str)  # Converte a coluna para string
+        else:
+            st.warning(f"Coluna {col} não encontrada no DataFrame")
+
+    col1, col2 = st.columns([1, 4])
+
+    with col1:
+        # Verifica se a coluna 'ID' existe antes de filtrar
+        id_column = [col for col in df.columns if col.lower() == 'id']
+        if id_column:
+            id_column = id_column[0]
+            id_filter = st.number_input('Filter by ID', min_value=0)
+            
+            # Aplica o filtro de ID apenas se o valor for maior que 0
+            if id_filter > 0:
+                filtered_df1 = filtered_df1[filtered_df1[id_column] == id_filter]
+
+        # Aplicar filtros para colunas categóricas
+        for col in categorical_columns:
+            if col in df.columns:
+                unique_values = sorted(df[col].unique())
+                selected_values = st.multiselect(
+                    f'Select {col}',
+                    unique_values,
+                    default=[]
+                )
+
+                if selected_values:
+                    filtered_df1 = filtered_df1[filtered_df1[col].isin(selected_values)]
+    with col2:
+        min_column_widths={
+            'Detetor': 100,
+            'Sponsor - Área Funcional': 250,
+            'Âmbito do Modelo': 130,
+            'Parâmetro': 100,
+            'Sponsor - Dependentes': 150, # não reconhece como categoricas não sei porquê
+            'Natureza da Medida': 200,
+            'Status de Modelo': 160,
+            'Severidade': 170,
+            'Tipo de Deadline': 170,
+            'Status': 170,
+            'Finding/Razão da Medida': 800,
+            'Data Referência Documental': 200,
+            'ID Finding/Razão da Medida Nível 1': 250,
+            'ID Obligation/Medida Nível 1': 250,
+            'Obligation/Medida': 500,
+            'Data de Implementação': 180,   
+            'Nº de Action Items': 120,
+            'Tipo Action Item - Data Quality': 140, 
+            'Tipo de Deadline': 100,
+            'Status': 100,
+            'Observações': 300,
+            'Severidade': 120,
+            'Action Plan': 250,
+                              }
+
+        display_dataframe_with_scroll(filtered_df1, min_column_widths=min_column_widths, height=800)
+        #st.dataframe(filtered_df1, use_container_width=True)
+
+    return filtered_df1
 
 
 def apply_filters_v2(df):
@@ -361,5 +432,89 @@ def plot_distribution_v2(df, column_name, width=6):
     plt.close(fig)
 
 
+def display_dataframe_with_scroll(df, min_column_widths=None, height=800):
+    """
+    Display DataFrame as HTML table in Streamlit with scroll bars, centered text and green header.
 
+    :param df: DataFrame to display
+    :param min_column_widths: Optional dictionary of {column_name: min_width_in_px}
+    :param height: Height of the table container in pixels (default: 800)
+    """
+    # Generate HTML table
+    html_table = df.to_html(index=False, escape=True, classes="dataframe-table")
+
+    # CSS for styling
+    css = f"""
+    <style>
+    .dataframe-container {{
+        height: {height}px;
+        overflow: auto;
+        margin: 1rem 0;
+        border: 1px solid #ddd;
+        border-radius: 2px;
+    }}
+    
+    .dataframe-table {{
+        border-collapse: collapse; 
+        width: 100%; 
+        font-size: 13px;
+    }}
+    
+    .dataframe-table th {{
+        background-color: #179297;  /* Green background for header */
+        color: white;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        border: 1px solid #ddd;
+        padding: 5px;
+    }}
+    
+    .dataframe-table td {{ 
+        border: 1px solid #ddd; 
+        padding: 8px; 
+        text-align: left;
+        vertical-align: top;
+    }}
+    
+    .dataframe-table tr:nth-child(even) {{
+        background-color: #f2f2f2;
+    }}
+    
+    /* Thin scrollbars */
+    .dataframe-container::-webkit-scrollbar {{
+        width: 6px;
+        height: 6px;
+    }}
+    
+    .dataframe-container::-webkit-scrollbar-track {{
+        background: #f1f1f1;
+    }}
+    
+    .dataframe-container::-webkit-scrollbar-thumb {{
+        background: #179297;
+        border-radius: 3px;
+    }}
+    
+    .dataframe-container::-webkit-scrollbar-thumb:hover {{
+        background: #555;
+    }}
+    """
+
+    # Add custom column width CSS if specified
+    if min_column_widths:
+        for col, width in min_column_widths.items():
+            if col in df.columns:
+                # Applies the custom width only if the column exists
+                css += f".dataframe-table th:nth-child({df.columns.get_loc(col) + 1}), .dataframe-table td:nth-child({df.columns.get_loc(col) + 1}) {{ min-width: {width}px; }}\n"
+            else:
+                st.warning(f"Coluna '{col}' não encontrada no DataFrame")
+
+    css += "</style>\n"
+
+    # Combine CSS and HTML table in a scrollable container
+    full_html = css + f'<div class="dataframe-container">{html_table}</div>'
+
+    # Display in Streamlit
+    st.markdown(full_html, unsafe_allow_html=True)
 
