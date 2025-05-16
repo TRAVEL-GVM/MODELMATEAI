@@ -55,7 +55,7 @@ MODELMATEAI/
 └── README.md
 
 
-> ℹ️ **Note**: The data used by this app is exported from the SharePoint list associated with the ModelMate internal platform. The CSV files are placed under the `ModelM/data/` folder.
+> ℹ️ **Note**: The data used by this app is exported from the SharePoint list associated with the ModelMate internal platform. The CSV files are placed (always keeping the same file name) under the `ModelM/data/` folder.
 
 ---
 
@@ -67,7 +67,23 @@ MODELMATEAI/
 git clone https://github.com/TRAVEL-GVM/MODELMATEAI.git
 cd MODELMATEAI
 
-2. **(Optional)
+2. **(Optional)**
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+3. **Install dependencies**
+
+```bash
+pip install -r data/requirements.txt
+Run the Streamlit app
+
+4. **Run streamlit app**
+```bash
+streamlit run data/app.py
+
+## 🔐 Access & Confidentiality
+This tool is intended for internal use only within the organization. It connects to sensitive data sources and uses internal documentation. Do not share or publish without proper authorization.
+
+## 👥 Authors & Contributions
+Developed by the TRAVEL team (internal acronym). Contributions and feedback are welcome via internal channels or through pull requests if applicable.
