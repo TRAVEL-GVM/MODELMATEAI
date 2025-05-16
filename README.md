@@ -66,21 +66,27 @@ MODELMATEAI/
 ```bash
 git clone https://github.com/TRAVEL-GVM/MODELMATEAI.git
 cd MODELMATEAI
+```
 
 2. **(Optional)**
+
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
 3. **Install dependencies**
 
 ```bash
 pip install -r data/requirements.txt
 Run the Streamlit app
+```
 
 4. **Run streamlit app**
+
 ```bash
 streamlit run data/app.py
+```
 
 ## 🔐 Access & Confidentiality
 This tool is intended for internal use only within the organization. It connects to sensitive data sources and uses internal documentation. Do not share or publish without proper authorization.
