@@ -29,18 +29,29 @@ An integration with **Large Language Models (LLMs)** was implemented to allow na
 MODELMATEAI/
 │
 ├── ModelM/
+
 │ └── data/ # CSV files exported from SharePoint ModelMate list
+
 │
 ├── data/
+
 │ ├── app.py # Streamlit frontend logic
+
 │ ├── config.py # Configurations and constants
+
 │ ├── functions.py # Helper functions for querying and display
+
 │ ├── get_data.py # Loads and preprocesses data from the CSVs
+
 │ ├── prompts.py # Prompt templates for LLM interactions
+
 │ ├── pandasai.log # Log from pandasai (LLM backend)
+
 │ └── requirements.txt # Python dependencies
 │
+
 ├── .gitignore
+
 └── README.md
 
 
