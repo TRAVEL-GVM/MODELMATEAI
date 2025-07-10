@@ -249,6 +249,8 @@ with tab1:
                         },
                     )
                     answer = query_engine.chat(query)
+		    
+                    st.markdown(answer)		
                     st.toast("✅ Analysis completed successfully!", icon="✅")
                      
                 except Exception as e:
