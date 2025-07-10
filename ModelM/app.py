@@ -245,7 +245,7 @@ with tab1:
                         config={
                             "llm": llm,
                             "response_parser": StreamlitResponse,
-                            #"callback": StreamlitCallback(container, show_code=show_code)
+                            "callback": StreamlitCallback(container, show_code=show_code)
                         },
                     )
                     answer = query_engine.chat(query)
